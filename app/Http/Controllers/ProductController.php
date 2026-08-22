@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Services\ProductService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -18,7 +20,9 @@ class ProductController extends Controller
 
     public function create()
     {
-        return Inertia::render('Products/Create');
+        return Inertia::render('Products/Create', [
+            'categories' => Category::all(),
+        ]);
     }
 
     public function store(Request $request)
@@ -40,7 +44,10 @@ class ProductController extends Controller
     public function edit(int $id)
     {
         $product = $this->service->getAll()->first(fn($p) => $p->id === $id);
-        return Inertia::render('Products/Edit', ['product' => $product]);
+        return Inertia::render('Products/Edit', [
+            'product' => $product,
+            'categories' => Category::all(),
+        ]);
     }
 
     public function update(Request $request, int $id)
