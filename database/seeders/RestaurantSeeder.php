@@ -51,11 +51,24 @@ class RestaurantSeeder extends Seeder
             Unit::firstOrCreate(['slug' => $unit['slug']], $unit);
         }
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@restoran.com'],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('password'),
+                'name' => 'Administrator',
+                'username' => 'admin',
+                'password' => Hash::make('SeCur3P@sswrD!'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'staff@restoran.com'],
+            [
+                'name' => 'Staff',
+                'username' => 'staff',
+                'password' => Hash::make('St@ffP@ss99!'),
+                'role' => 'staff',
                 'email_verified_at' => now(),
             ]
         );

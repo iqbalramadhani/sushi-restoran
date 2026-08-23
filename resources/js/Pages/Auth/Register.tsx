@@ -9,6 +9,7 @@ interface Props {
 export default function Register({ errors }: Props) {
     const [form, setForm] = useState({
         name: '',
+        username: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -44,6 +45,23 @@ export default function Register({ errors }: Props) {
                     </div>
 
                     <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                            Username
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            value={form.username}
+                            onChange={(e) => setForm({ ...form, username: e.target.value })}
+                            required
+                            autoComplete="username"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        />
+                        {errors?.username && <p className="mt-1 text-sm text-red-600">{errors.username}</p>}
+                    </div>
+
+                    <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                             Email
                         </label>
@@ -54,7 +72,7 @@ export default function Register({ errors }: Props) {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             required
-                            autoComplete="username"
+                            autoComplete="email"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
                         {errors?.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}

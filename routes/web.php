@@ -14,14 +14,14 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('products', ProductController::class)->except(['show']);
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::resource('ingredients', IngredientController::class)->except(['show']);
     Route::post('/units', [UnitController::class, 'store'])->name('units.store');
-    Route::resource('tables', TableController::class)->except(['show', 'update']);
+    Route::resource('tables', TableController::class)->except(['show']);
     Route::post('/tables/{table}/occupy', [TableController::class, 'occupy'])->name('tables.occupy');
     Route::post('/tables/{table}/free', [TableController::class, 'free'])->name('tables.free');
 

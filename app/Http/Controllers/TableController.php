@@ -45,4 +45,29 @@ class TableController extends Controller
         $this->service->create($validated);
         return to_route('tables.index')->with('success', 'Table created successfully.');
     }
+
+    public function edit(int $id)
+    {
+        return Inertia::render('Tables/Edit', [
+            'table' => $this->service->findById($id),
+        ]);
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'name' => "required|string|max:255|unique:tables,name,{$id}",
+            'capacity' => 'required|integer|min:1',
+            'seat_count' => 'required|integer|min:1',
+        ]);
+
+        $this->service->update($id, $validated);
+        return to_route('tables.index')->with('success', 'Table updated successfully.');
+    }
+
+    public function destroy(int $id)
+    {
+        $this->service->destroy($id);
+        return to_route('tables.index')->with('success', 'Table deleted successfully.');
+    }
 }

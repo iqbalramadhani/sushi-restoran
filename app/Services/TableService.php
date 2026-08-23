@@ -13,6 +13,11 @@ class TableService
         return $this->repository->all();
     }
 
+    public function findById(int $id): ?\App\Models\Table
+    {
+        return $this->repository->find($id);
+    }
+
     public function getAvailable(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->repository->findByStatus('available');
@@ -31,5 +36,15 @@ class TableService
     public function create(array $data): object
     {
         return $this->repository->create($data);
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        return $this->repository->update($id, $data);
+    }
+
+    public function destroy(int $id): bool
+    {
+        return $this->repository->delete($id);
     }
 }

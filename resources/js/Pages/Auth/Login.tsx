@@ -8,11 +8,11 @@ interface Props {
 }
 
 export default function Login({ status, errors }: Props) {
-    const [form, setForm] = useState({ email: '', password: '' });
+    const [form, setForm] = useState({ username: '', password: '' });
     const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
-        return () => setForm({ email: '', password: '' });
+        return () => setForm({ username: '', password: '' });
     }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -32,21 +32,21 @@ export default function Login({ status, errors }: Props) {
             <form onSubmit={handleSubmit}>
                 <div className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                            Username
                         </label>
                         <input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                            id="username"
+                            type="text"
+                            name="username"
+                            value={form.username}
+                            onChange={(e) => setForm({ ...form, username: e.target.value })}
                             required
                             autoFocus
                             autoComplete="username"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
-                        {errors?.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                        {errors?.username && <p className="mt-1 text-sm text-red-600">{errors.username}</p>}
                     </div>
 
                     <div>
@@ -72,6 +72,12 @@ export default function Login({ status, errors }: Props) {
                             className="text-sm text-gray-600 hover:text-gray-900"
                         >
                             Belum punya akun? Daftar
+                        </Link>
+                        <Link
+                            href={route('password.request')}
+                            className="text-sm text-gray-600 hover:text-gray-900"
+                        >
+                            Lupa password?
                         </Link>
                     </div>
 
