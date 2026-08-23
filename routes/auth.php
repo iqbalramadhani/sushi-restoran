@@ -17,6 +17,10 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
+    Route::get('register/success', function () {
+        return Inertia::render('Auth/RegisterSuccess');
+    })->name('register.success');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 

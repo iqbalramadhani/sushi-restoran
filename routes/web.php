@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\AccountRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('account-requests')->group(function () {
+        Route::get('/', [AccountRequestController::class, 'index'])->name('account-requests.index');
+        Route::get('/{accountRequest}', [AccountRequestController::class, 'show'])->name('account-requests.show');
+        Route::post('/{accountRequest}/approve', [AccountRequestController::class, 'approve'])->name('account-requests.approve');
+        Route::post('/{accountRequest}/reject', [AccountRequestController::class, 'reject'])->name('account-requests.reject');
+    });
 });
 
 require __DIR__.'/auth.php';

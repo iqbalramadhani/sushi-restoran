@@ -35,9 +35,9 @@ php artisan migrate:fresh --seed
 
 ---
 
-### Fix #2 — BelongsToMany import missing in Product model
+### Fix #4 — Login username + system pengajuan akun dengan approval admin
 Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
-2026-08-23 · app/Models/Product.php · "Return value must be of type App\Models\BelongsToMany, Illuminate\Database\Eloquent\Relations\BelongsToMany returned" · Class BelongsToMany tidak di-import · Tambah `use Illuminate\Database\Eloquent\Relations\BelongsToMany;` · ✅ HTTP 302 (redirect login, normal) · Selalu import semua relation class yang dipakai · BelongsToMany · Belum deploy
+2026-08-23 · database/migrations/2026_08_23_073433_add_username_to_users_table.php, database/migrations/2026_08_23_074213_create_account_requests_table.php, app/Models/User.php, app/Models/AccountRequest.php, app/Http/Controllers/Auth/AuthenticatedSessionController.php, app/Http/Controllers/Auth/RegisteredUserController.php, app/Http/Controllers/Auth/ConfirmablePasswordController.php, app/Http/Controllers/AccountRequestController.php, app/Http/Requests/Auth/LoginRequest.php, app/Http/Middleware/HandleInertiaRequests.php, routes/web.php, routes/auth.php, resources/js/Pages/Auth/Login.tsx, resources/js/Pages/Auth/Register.tsx, resources/js/Pages/Auth/RegisterSuccess.tsx, resources/js/Pages/AccountRequests/Index.tsx, resources/js/Pages/AccountRequests/Show.tsx, database/seeders/RestaurantSeeder.php, database/factories/UserFactory.php, tests/Feature/Auth/AuthenticationTest.php, tests/Feature/Auth/RegistrationTest.php · Login sebelumnya pakai email yang kurang intuitif untuk user internal restoran · Akar masalah: email field wajib tapi user lebih suka username yang sederhana · Fix: (1) Tambah kolom `username` unique ke tabel users via migration baru, (2) Update LoginRequest validate & attempt pakai `username`, (3) Ubah RegisteredUserController simpan ke table `account_requests` bukan langsung buat user — flow baru jadi "Ajukan Akun" menunggu approval admin, (4) Buat AccountRequestController untuk approve/reject request, (5) Blokir login user dengan `email_verified_at` null, (6) Hapus middleware `verified` dari web routes, (7) Seeder update pakai `updateOrCreate` dengan username `admin` & `staff`, password kuat `SeCur3P@sswrD!` & `St@ffP@ss99!`, (8) Frontend: Login ganti field email→username, Register ubah jadi formulir ajukan dengan status success page, Admin bisa kelola request di halaman `/account-requests`. · ✅ 64/64 test passed, migrate berhasil, seeders berjalan, frontend build bersih · Password default user sudah diganti dari "password" ke password yang lebih kuat · Logout otomatis saat approve karena Auth::login() mengubah session · Gunakan `updateOrCreate` bukan `firstOrCreate` di seeder karena email unik constraint bisa konflik dengan data lama · Belum deploy
 
 ---
 
@@ -48,3 +48,5 @@ Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyw
 ---
 
 ### Fix #2 — BelongsToMany import missing in Product model
+Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
+2026-08-23 · app/Models/Product.php · "Return value must be of type App\Models\BelongsToMany, Illuminate\Database\Eloquent\Relations\BelongsToMany returned" · Class BelongsToMany tidak di-import · Tambah `use Illuminate\Database\Eloquent\Relations\BelongsToMany;` · ✅ HTTP 302 (redirect login, normal) · Selalu import semua relation class yang dipakai · BelongsToMany · Belum deploy
