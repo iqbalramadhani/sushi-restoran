@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Table;
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class RestaurantSeeder extends Seeder
@@ -54,6 +55,19 @@ class RestaurantSeeder extends Seeder
 
         foreach ($tables as $table) {
             Table::firstOrCreate(['name' => $table['name']], $table);
+        }
+
+        $units = [
+            ['name' => 'Gram', 'slug' => 'gram'],
+            ['name' => 'Mililiter', 'slug' => 'ml'],
+            ['name' => 'Potong', 'slug' => 'piece'],
+            ['name' => 'Buah', 'slug' => 'buah'],
+            ['name' => 'Sendok', 'slug' => 'sendok'],
+            ['name' => 'Cakar', 'slug' => 'cakar'],
+        ];
+
+        foreach ($units as $unit) {
+            Unit::firstOrCreate(['slug' => $unit['slug']], $unit);
         }
     }
 }

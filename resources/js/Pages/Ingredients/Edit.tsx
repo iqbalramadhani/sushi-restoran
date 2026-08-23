@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Ingredient } from '@/types';
+import { Ingredient, Unit } from '@/types';
 
 interface Props {
     ingredient: Ingredient;
+    units: Unit[];
 }
 
-export default function IngredientEdit({ ingredient }: Props) {
+export default function IngredientEdit({ ingredient, units }: Props) {
     const [form, setForm] = useState({ name: ingredient.name, unit: ingredient.unit });
+    const [customUnit, setCustomUnit] = useState('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleChange = (field: string, value: string) => {
@@ -16,9 +18,23 @@ export default function IngredientEdit({ ingredient }: Props) {
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleUnitChange = (value: string) => {
+        handleChange('unit', value);
+        setCustomUnit('');
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        router.put(route('ingredients.update', ingredient.id), form, { preserveScroll: true, onError: (err) => setErrors(err) });
+        let unit = form.unit;
+        if (unit === 'custom') {
+            if (!customUnit.trim()) {
+                setErrors({ unit: 'Masukkan nama satuan baru' });
+                return;
+            }
+            await router.postPromise(route('units.store'), { name: customUnit.trim() });
+            unit = customUnit.trim();
+        }
+        router.put(route('ingredients.update', ingredient.id), { ...form, unit }, { preserveScroll: true, onError: (err) => setErrors(err) });
     };
 
     return (
@@ -38,14 +54,15 @@ export default function IngredientEdit({ ingredient }: Props) {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Satuan</label>
-                                            <select value={form.unit} onChange={(e) => handleChange('unit', e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                                <option value="gram">Gram (g)</option>
-                                                <option value="ml">Mililiter (ml)</option>
-                                                <option value="piece">Potong (pcs)</option>
-                                                <option value="buah">Buah</option>
-                                                <option value="sendok">Sendok (sdt)</option>
-                                                <option value="cakar">Cakar (cup)</option>
+                                            <select value={form.unit} onChange={(e) => handleUnitChange(e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                {units.map(u => (
+                                                    <option key={u.id} value={u.name}>{u.name}</option>
+                                                ))}
+                                                <option value="custom">+ Tambah Satuan Baru</option>
                                             </select>
+                                            {form.unit === 'custom' && (
+                                                <input type="text" value={customUnit} onChange={(e) => setCustomUnit(e.target.value)} placeholder="Ketik satuan baru..." className="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            )}
                                             {errors.unit && <p className="mt-1 text-sm text-red-600">{errors.unit}</p>}
                                         </div>
                                         <div className="flex justify-end gap-3">

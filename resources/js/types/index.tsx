@@ -53,6 +53,14 @@ export interface OrderItem {
     product?: Product;
 }
 
+export interface Unit {
+    id: number;
+    name: string;
+    slug: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Ingredient {
     id: number;
     name: string;

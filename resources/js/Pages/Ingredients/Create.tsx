@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Unit } from '@/types';
 
-export default function IngredientCreate() {
+interface Props {
+    units: Unit[];
+}
+
+export default function IngredientCreate({ units }: Props) {
     const [form, setForm] = useState({ name: '', unit: 'gram' });
+    const [customUnit, setCustomUnit] = useState('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleChange = (field: string, value: string) => {
@@ -11,9 +17,23 @@ export default function IngredientCreate() {
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleUnitChange = (value: string) => {
+        handleChange('unit', value);
+        setCustomUnit('');
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        router.post(route('ingredients.store'), form, { preserveScroll: true, onError: (err) => setErrors(err), onSuccess: () => setForm({ name: '', unit: 'gram' }) });
+        let unit = form.unit;
+        if (unit === 'custom') {
+            if (!customUnit.trim()) {
+                setErrors({ unit: 'Masukkan nama satuan baru' });
+                return;
+            }
+            const res = await router.postPromise(route('units.store'), { name: customUnit.trim() });
+            unit = customUnit.trim();
+        }
+        router.post(route('ingredients.store'), { ...form, unit }, { preserveScroll: true, onError: (err) => setErrors(err), onSuccess: () => setForm({ name: '', unit: 'gram' }) });
     };
 
     return (
@@ -33,14 +53,15 @@ export default function IngredientCreate() {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Satuan</label>
-                                            <select value={form.unit} onChange={(e) => handleChange('unit', e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                                <option value="gram">Gram (g)</option>
-                                                <option value="ml">Mililiter (ml)</option>
-                                                <option value="piece">Potong (pcs)</option>
-                                                <option value="buah">Buah</option>
-                                                <option value="sendok">Sendok (sdt)</option>
-                                                <option value="cakar">Cakar (cup)</option>
+                                            <select value={form.unit} onChange={(e) => handleUnitChange(e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                {units.map(u => (
+                                                    <option key={u.id} value={u.name}>{u.name}</option>
+                                                ))}
+                                                <option value="custom">+ Tambah Satuan Baru</option>
                                             </select>
+                                            {form.unit === 'custom' && (
+                                                <input type="text" value={customUnit} onChange={(e) => setCustomUnit(e.target.value)} placeholder="Ketik satuan baru..." className="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            )}
                                             {errors.unit && <p className="mt-1 text-sm text-red-600">{errors.unit}</p>}
                                         </div>
                                         <div className="flex justify-end gap-3">

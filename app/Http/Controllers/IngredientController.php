@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Services\IngredientService;
+use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class IngredientController extends Controller
 {
-    public function __construct(protected IngredientService $service) {}
+    public function __construct(
+        protected IngredientService $service,
+        protected UnitService $unitService
+    ) {}
 
     public function index()
     {
@@ -19,7 +24,9 @@ class IngredientController extends Controller
 
     public function create()
     {
-        return Inertia::render('Ingredients/Create');
+        return Inertia::render('Ingredients/Create', [
+            'units' => $this->unitService->getAll(),
+        ]);
     }
 
     public function store(Request $request)
@@ -29,7 +36,7 @@ class IngredientController extends Controller
             'unit' => 'required|string|max:10',
         ]);
 
-        $validated['slug'] = \Str::slug($validated['name']);
+        $validated['slug'] = Str::slug($validated['name']);
         $this->service->create($validated);
 
         return to_route('ingredients.index')->with('success', 'Bahan baku berhasil ditambahkan.');
@@ -40,6 +47,7 @@ class IngredientController extends Controller
         $ingredient = $this->service->getAll()->first(fn($i) => $i->id === $id);
         return Inertia::render('Ingredients/Edit', [
             'ingredient' => $ingredient,
+            'units' => $this->unitService->getAll(),
         ]);
     }
 
@@ -50,7 +58,7 @@ class IngredientController extends Controller
             'unit' => 'required|string|max:10',
         ]);
 
-        $validated['slug'] = \Str::slug($validated['name']);
+        $validated['slug'] = Str::slug($validated['name']);
         $this->service->update($id, $validated);
 
         return to_route('ingredients.index')->with('success', 'Bahan baku berhasil diperbarui.');

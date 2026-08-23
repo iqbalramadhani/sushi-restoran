@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class)->except(['show']);
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::resource('ingredients', IngredientController::class)->except(['show']);
+    Route::post('/units', [UnitController::class, 'store'])->name('units.store');
     Route::resource('tables', TableController::class)->except(['show', 'update']);
     Route::post('/tables/{table}/occupy', [TableController::class, 'occupy'])->name('tables.occupy');
     Route::post('/tables/{table}/free', [TableController::class, 'free'])->name('tables.free');
