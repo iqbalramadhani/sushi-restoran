@@ -55,6 +55,17 @@ class OrderRepository implements RepositoryInterface
         $order->update(['total' => $total]);
     }
 
+    public function update(int $id, array $data): bool
+    {
+        $order = $this->model->findOrFail($id);
+        return $order->update($data);
+    }
+
+    public function delete(int $id): bool
+    {
+        return $this->model->destroy($id);
+    }
+
     public function updateStatus(int $id, string $status): bool
     {
         $order = $this->model->findOrFail($id);
