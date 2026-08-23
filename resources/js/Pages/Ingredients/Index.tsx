@@ -40,7 +40,7 @@ export default function IngredientIndex({ ingredients, success }: Props) {
                                                 <td className="px-6 py-4 font-medium text-gray-900">{ingredient.name}</td>
                                                 <td className="px-6 py-4 text-gray-500">{ingredient.unit}</td>
                                                 <td className="px-6 py-4 text-right space-x-2">
-                                                    <Link href={route('ingredients.edit', ingredient.id)} className="text-blue-600 hover:text-blue-800">Edit</Link>
+                                                    <Link href={route('ingredients.edit', ingredient.id)} className="text-blue-600 hover:text-blue-800">Ubah</Link>
                                                     <button onClick={() => handleDelete(ingredient.id)} className="text-red-600 hover:text-red-800">Hapus</button>
                                                 </td>
                                             </tr>

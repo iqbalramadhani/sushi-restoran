@@ -120,7 +120,7 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                                     </div>
                                 )}
                                 <div className="border-t pt-3 flex justify-between font-bold text-lg">
-                                    <span>Total</span>
+                                    <span>Jumlah</span>
                                     <span className="text-blue-600">Rp {total.toLocaleString('id-ID')}</span>
                                 </div>
                                 <div className="mt-4 space-y-2">

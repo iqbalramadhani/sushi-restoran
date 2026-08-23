@@ -48,7 +48,7 @@ export default function ProductIndex({ products, success }: Props) {
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-right space-x-2">
-                                                    <Link href={route('products.edit', product.id)} className="text-blue-600 hover:text-blue-800">Edit</Link>
+                                                    <Link href={route('products.edit', product.id)} className="text-blue-600 hover:text-blue-800">Ubah</Link>
                                                     <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-800">Hapus</button>
                                                 </td>
                                             </tr>

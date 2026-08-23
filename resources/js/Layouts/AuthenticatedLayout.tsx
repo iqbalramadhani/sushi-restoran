@@ -36,10 +36,10 @@ export default function AuthenticatedLayout({ children, header }: Props) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
+                                    Dasbor
                                 </NavLink>
                                 <NavLink href={route('orders.index')} active={route().current('orders.*')}>
-                                    Orders
+                                    Pesanan
                                 </NavLink>
                                 <NavLink href={route('products.index')} active={route().current('products.*')}>
                                     Menu
@@ -81,14 +81,14 @@ export default function AuthenticatedLayout({ children, header }: Props) {
                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                             onClick={() => setDropdownOpen(false)}
                                         >
-                                            Profile
+                                            Profil
                                         </Link>
                                         <form method="POST" action={route('logout')}>
                                             <button
                                                 type="submit"
                                                 className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                                             >
-                                                Log Out
+                                                Keluar
                                             </button>
                                         </form>
                                     </div>

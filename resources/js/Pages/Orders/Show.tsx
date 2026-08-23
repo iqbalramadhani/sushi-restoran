@@ -45,7 +45,7 @@ export default function OrderShow({ order }: Props) {
                                     </div>
                                 ) : <div className="text-gray-500 text-center py-4">Tidak ada item</div>}
                                 <div className="mt-4 pt-4 border-t flex justify-between font-bold text-lg">
-                                    <span>Total</span>
+                                    <span>Jumlah</span>
                                     <span className="text-blue-600">Rp {Number(order.total).toLocaleString('id-ID')}</span>
                                 </div>
                                 <p className="mt-2 text-xs text-gray-400">Dibuat: {new Date(order.created_at).toLocaleString('id-ID')}</p>

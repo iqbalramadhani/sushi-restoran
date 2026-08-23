@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Table } from '@/types';
 
@@ -34,7 +34,7 @@ export default function TableIndex({ tables, success }: Props) {
                                         <span className="font-bold text-gray-800 text-lg">{table.name}</span>
                                         <span className="text-xs text-gray-500">{table.capacity} kursi</span>
                                         <span className={`absolute top-2 right-2 text-xs font-semibold px-2 py-0.5 rounded-full ${table.status === 'available' ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'}`}>
-                                            {table.status === 'available' ? 'Free' : 'Occupied'}
+                                            {table.status === 'available' ? 'Kosong' : 'Terisi'}
                                         </span>
                                     </div>
                                 ))}

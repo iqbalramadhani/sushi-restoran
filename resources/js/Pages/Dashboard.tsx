@@ -9,11 +9,11 @@ interface Props {
 export default function Dashboard({ stats }: Props) {
     return (
         <>
-            <Head title="Dashboard" />
+            <Head title="Dasbor" />
             <AuthenticatedLayout
                 header={
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Dashboard
+                        Dasbor
                     </h2>
                 }
             >
@@ -103,7 +103,7 @@ export default function Dashboard({ stats }: Props) {
                                         Ada {stats.pending_orders} order pending yang perlu diproses.
                                     </div>
                                 ) : (
-                                    <div className="text-gray-500">Tidak ada order pending.</div>
+                                    <div className="text-gray-500">Tidak ada order yang belum diproses.</div>
                                 )}
                             </div>
                         </div>
