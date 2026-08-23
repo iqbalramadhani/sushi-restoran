@@ -14,11 +14,27 @@ export default function ProductCreate({ categories, ingredients }: Props) {
     const [showCategoryModal, setShowCategoryModal] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', description: '' });
     const [categoryErrors, setCategoryErrors] = useState<Record<string, string>>({});
-    const [ingredientRows, setIngredientRows] = useState<{ ingredient_id: string; quantity: string; unit: string }[]>([{ ingredient_id: '', quantity: '', unit: 'gram' }]);
+    const [ingredientRows, setIngredientRows] = useState<{ ingredient_id: string; quantity: string }[]>([{ ingredient_id: '', quantity: '' }]);
 
     const handleChange = (field: string, value: string | boolean) => {
         setForm(prev => ({ ...prev, [field]: value }));
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
+    };
+
+    const formatPrice = (value: string) => {
+        const cleaned = value.replace(/\D/g, '');
+        return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
+    const parsePrice = (value: string) => value.replace(/\./g, '').replace(/\D/g, '');
+
+    const handlePriceFocus = () => {
+        setForm(prev => ({ ...prev, price: parsePrice(prev.price) }));
+    };
+
+    const handlePriceBlur = () => {
+        const raw = parsePrice(form.price);
+        setForm(prev => ({ ...prev, price: raw ? formatPrice(raw) : '' }));
     };
 
     const handleIngredientChange = (index: number, field: string, value: string) => {
@@ -28,7 +44,7 @@ export default function ProductCreate({ categories, ingredients }: Props) {
     };
 
     const addIngredientRow = () => {
-        setIngredientRows([...ingredientRows, { ingredient_id: '', quantity: '', unit: 'gram' }]);
+        setIngredientRows([...ingredientRows, { ingredient_id: '', quantity: '' }]);
     };
 
     const removeIngredientRow = (index: number) => {
@@ -38,8 +54,12 @@ export default function ProductCreate({ categories, ingredients }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const payload = { ...form, ingredients: ingredientRows.filter(r => r.ingredient_id) };
-        router.post(route('products.store'), payload, { preserveScroll: true, onError: (err) => setErrors(err), onSuccess: () => { setForm({ category_id: '', name: '', price: '', description: '', is_available: true }); setIngredientRows([{ ingredient_id: '', quantity: '', unit: 'gram' }]); } });
+        const payload = {
+            ...form,
+            price: parsePrice(form.price),
+            ingredients: ingredientRows.filter(r => r.ingredient_id),
+        };
+        router.post(route('products.store'), payload, { preserveScroll: true, onError: (err) => setErrors(err), onSuccess: () => { setForm({ category_id: '', name: '', price: '', description: '', is_available: true }); setIngredientRows([{ ingredient_id: '', quantity: '' }]); } });
     };
 
     const handleAddCategory = () => {
@@ -88,7 +108,7 @@ export default function ProductCreate({ categories, ingredients }: Props) {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Harga (Rp)</label>
-                                            <input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} min="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            <input type="text" value={form.price} onChange={(e) => handleChange('price', e.target.value)} onFocus={handlePriceFocus} onBlur={handlePriceBlur} inputMode="numeric" pattern="[0-9]*" placeholder="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                             {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
                                         </div>
                                         <div>
@@ -99,20 +119,12 @@ export default function ProductCreate({ categories, ingredients }: Props) {
                                             <label className="block text-sm font-medium text-gray-700">Bahan Baku</label>
                                             <div className="mt-2 space-y-2">
                                                 {ingredientRows.map((row, index) => (
-                                                    <div key={index} className="flex gap-2 items-start">
+                                                    <div key={index} className="flex gap-2 items-center">
                                                         <select value={row.ingredient_id} onChange={(e) => handleIngredientChange(index, 'ingredient_id', e.target.value)} className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                                             <option value="">Pilih Bahan Baku</option>
-                                                            {ingredients.map(ing => <option key={ing.id} value={ing.id}>{ing.name}</option>)}
+                                                            {ingredients.map(ing => <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>)}
                                                         </select>
                                                         <input type="number" value={row.quantity} onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)} placeholder="Qty" min="0" step="0.01" className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-                                                        <select value={row.unit} onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)} className="w-24 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                                            <option value="gram">g</option>
-                                                            <option value="ml">ml</option>
-                                                            <option value="piece">pcs</option>
-                                                            <option value="buah">bh</option>
-                                                            <option value="sendok">sdt</option>
-                                                            <option value="cakar">cup</option>
-                                                        </select>
                                                         <button type="button" onClick={() => removeIngredientRow(index)} className="px-2 text-red-600 hover:text-red-800">✕</button>
                                                     </div>
                                                 ))}

@@ -31,6 +31,8 @@ export default function IngredientIndex({ ingredients, success }: Props) {
                                         <tr>
                                             <th className="px-6 py-3">Nama</th>
                                             <th className="px-6 py-3">Satuan</th>
+                                            <th className="px-6 py-3">Stok</th>
+                                            <th className="px-6 py-3">Min</th>
                                             <th className="px-6 py-3 text-right">Aksi</th>
                                         </tr>
                                     </thead>
@@ -39,6 +41,12 @@ export default function IngredientIndex({ ingredients, success }: Props) {
                                             <tr key={ingredient.id} className="hover:bg-gray-50">
                                                 <td className="px-6 py-4 font-medium text-gray-900">{ingredient.name}</td>
                                                 <td className="px-6 py-4 text-gray-500">{ingredient.unit}</td>
+                                                <td className={`px-6 py-4 font-semibold ${ingredient.stock <= ingredient.min_stock && ingredient.min_stock > 0 ? 'text-red-600' : 'text-gray-700'}`}>
+                                                    {Number(ingredient.stock).toLocaleString('id-ID', { maximumFractionDigits: 2 })}
+                                                </td>
+                                                <td className="px-6 py-4 text-gray-500">
+                                                    {ingredient.min_stock > 0 ? Number(ingredient.min_stock).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : '-'}
+                                                </td>
                                                 <td className="px-6 py-4 text-right space-x-2">
                                                     <Link href={route('ingredients.edit', ingredient.id)} className="text-blue-600 hover:text-blue-800">Ubah</Link>
                                                     <button onClick={() => handleDelete(ingredient.id)} className="text-red-600 hover:text-red-800">Hapus</button>
@@ -46,7 +54,7 @@ export default function IngredientIndex({ ingredients, success }: Props) {
                                             </tr>
                                         ))}
                                         {ingredients.length === 0 && (
-                                            <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500">Belum ada bahan baku.</td></tr>
+                                            <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Belum ada bahan baku.</td></tr>
                                         )}
                                     </tbody>
                                 </table>

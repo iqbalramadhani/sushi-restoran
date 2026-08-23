@@ -66,8 +66,21 @@ export interface Ingredient {
     name: string;
     slug: string;
     unit: string;
+    stock: number;
+    min_stock: number;
     created_at: string;
     updated_at: string;
+}
+
+export interface ProductLowStock {
+    product_id: number;
+    product_name: string;
+    ingredient_id: number;
+    ingredient_name: string;
+    stock: number;
+    min_stock: number;
+    unit: string;
+    recipe_qty: number;
 }
 
 export interface ProductIngredient {

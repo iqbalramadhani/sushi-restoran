@@ -17,6 +17,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Index', [
             'products' => $this->service->getAll(),
+            'low_stock_products' => app(\App\Services\IngredientService::class)->getLowStockIngredients(),
         ]);
     }
 

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function IngredientEdit({ ingredient, units }: Props) {
-    const [form, setForm] = useState({ name: ingredient.name, unit: ingredient.unit });
+    const [form, setForm] = useState({ name: ingredient.name, unit: ingredient.unit, stock: ingredient.stock ?? 0, min_stock: ingredient.min_stock ?? 0 });
     const [customUnit, setCustomUnit] = useState('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -69,6 +69,15 @@ export default function IngredientEdit({ ingredient, units }: Props) {
                                                 <input type="text" value={customUnit} onChange={(e) => setCustomUnit(e.target.value)} placeholder="Ketik satuan baru..." className="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                             )}
                                             {errors.unit && <p className="mt-1 text-sm text-red-600">{errors.unit}</p>}
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">Stok Saat Ini</label>
+                                            <input type="number" value={form.stock} onChange={(e) => handleChange('stock', e.target.value)} min="0" step="0.01" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">Batas Minimum</label>
+                                            <input type="number" value={form.min_stock} onChange={(e) => handleChange('min_stock', e.target.value)} min="0" step="0.01" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            <p className="mt-1 text-xs text-gray-500">Peringatan akan muncul saat stok ≤ batas minimum</p>
                                         </div>
                                         <div className="flex justify-end gap-3">
                                             <Link href={route('ingredients.index')} className="px-4 py-2 bg-gray-100 rounded-md text-gray-700 hover:bg-gray-200">Batal</Link>

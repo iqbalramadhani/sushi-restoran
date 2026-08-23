@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use App\Repositories\OrderRepository;
 
 class OrderService
 {
-    public function __construct(protected OrderRepository $repository) {}
+    public function __construct(
+        protected OrderRepository $repository,
+        protected IngredientService $ingredientService
+    ) {}
 
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
@@ -28,8 +32,22 @@ class OrderService
         ]);
 
         $this->repository->addItems($order->id, $items);
+        $this->deductIngredients($items);
 
         return $this->repository->find($order->id);
+    }
+
+    protected function deductIngredients(array $items): void
+    {
+        foreach ($items as $item) {
+            $product = Product::with('ingredients')->find($item['product_id']);
+            if (!$product) continue;
+
+            foreach ($product->ingredients as $ingredient) {
+                $qtyNeeded = $ingredient->pivot->quantity * $item['quantity'];
+                $this->ingredientService->deductStock($ingredient->id, $qtyNeeded);
+            }
+        }
     }
 
     public function processOrder(int $id): bool

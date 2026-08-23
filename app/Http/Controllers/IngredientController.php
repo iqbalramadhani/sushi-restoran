@@ -19,6 +19,7 @@ class IngredientController extends Controller
     {
         return Inertia::render('Ingredients/Index', [
             'ingredients' => $this->service->getAll(),
+            'low_stock_ingredients' => $this->service->getLowStockIngredients(),
         ]);
     }
 
@@ -34,9 +35,13 @@ class IngredientController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:10',
+            'stock' => 'nullable|numeric|min:0',
+            'min_stock' => 'nullable|numeric|min:0',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+        $validated['stock'] = $validated['stock'] ?? 0;
+        $validated['min_stock'] = $validated['min_stock'] ?? 0;
         $this->service->create($validated);
 
         return to_route('ingredients.index')->with('success', 'Bahan baku berhasil ditambahkan.');
@@ -56,6 +61,8 @@ class IngredientController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:10',
+            'stock' => 'nullable|numeric|min:0',
+            'min_stock' => 'nullable|numeric|min:0',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
