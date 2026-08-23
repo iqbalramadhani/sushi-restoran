@@ -31,7 +31,12 @@ export default function IngredientEdit({ ingredient, units }: Props) {
                 setErrors({ unit: 'Masukkan nama satuan baru' });
                 return;
             }
-            await router.postPromise(route('units.store'), { name: customUnit.trim() });
+            const csrf = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '';
+            await fetch(route('units.store'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                body: JSON.stringify({ name: customUnit.trim() }),
+            });
             unit = customUnit.trim();
         }
         router.put(route('ingredients.update', ingredient.id), { ...form, unit }, { preserveScroll: true, onError: (err) => setErrors(err) });

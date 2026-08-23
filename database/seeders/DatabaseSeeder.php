@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             RestaurantSeeder::class,
         ]);
 
-        User::factory()->create([
+        User::firstOrCreate([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
