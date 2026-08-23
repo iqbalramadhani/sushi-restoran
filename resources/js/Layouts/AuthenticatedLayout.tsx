@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 interface Props {
     children: React.ReactNode;
@@ -83,14 +83,12 @@ export default function AuthenticatedLayout({ children, header }: Props) {
                                         >
                                             Profil
                                         </Link>
-                                        <form method="POST" action={route('logout')}>
-                                            <button
-                                                type="submit"
-                                                className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                                            >
-                                                Keluar
-                                            </button>
-                                        </form>
+                                        <button
+                                            onClick={() => router.post(route('logout'))}
+                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Keluar
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -122,7 +120,7 @@ function NavLink({
     children: React.ReactNode;
 }) {
     return (
-        <a
+        <Link
             href={href}
             className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition duration-150 ease-in-out ${
                 active
@@ -131,6 +129,6 @@ function NavLink({
             }`}
         >
             {children}
-        </a>
+        </Link>
     );
 }

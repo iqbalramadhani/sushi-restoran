@@ -52,7 +52,8 @@ class ProductController extends Controller
             );
         }
 
-        return to_route('products.index')->with('success', 'Product created successfully.');
+        session()->flash('success', 'Product created successfully.');
+        return inertia()->location(route('products.index'));
     }
 
     public function edit(int $id)
@@ -82,12 +83,14 @@ class ProductController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $this->service->update($id, $validated);
 
-        return to_route('products.index')->with('success', 'Product updated successfully.');
+        session()->flash('success', 'Product updated successfully.');
+        return inertia()->location(route('products.index'));
     }
 
     public function destroy(int $id)
     {
         $this->service->delete($id);
-        return to_route('products.index')->with('success', 'Product deleted successfully.');
+        session()->flash('success', 'Product deleted successfully.');
+        return inertia()->location(route('products.index'));
     }
 }

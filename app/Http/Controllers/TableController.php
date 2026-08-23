@@ -20,13 +20,15 @@ class TableController extends Controller
     public function occupy(int $id)
     {
         $this->service->occupy($id);
-        return to_route('tables.index')->with('success', 'Table is now occupied.');
+        session()->flash('success', 'Table is now occupied.');
+        return inertia()->location(route('tables.index'));
     }
 
     public function free(int $id)
     {
         $this->service->free($id);
-        return to_route('tables.index')->with('success', 'Table is now available.');
+        session()->flash('success', 'Table is now available.');
+        return inertia()->location(route('tables.index'));
     }
 
     public function create()
@@ -43,7 +45,8 @@ class TableController extends Controller
         ]);
 
         $this->service->create($validated);
-        return to_route('tables.index')->with('success', 'Table created successfully.');
+        session()->flash('success', 'Table created successfully.');
+        return inertia()->location(route('tables.index'));
     }
 
     public function edit(int $id)
@@ -62,12 +65,14 @@ class TableController extends Controller
         ]);
 
         $this->service->update($id, $validated);
-        return to_route('tables.index')->with('success', 'Table updated successfully.');
+        session()->flash('success', 'Table updated successfully.');
+        return inertia()->location(route('tables.index'));
     }
 
     public function destroy(int $id)
     {
         $this->service->destroy($id);
-        return to_route('tables.index')->with('success', 'Table deleted successfully.');
+        session()->flash('success', 'Table deleted successfully.');
+        return inertia()->location(route('tables.index'));
     }
 }

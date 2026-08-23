@@ -32,7 +32,7 @@ class Product extends Model
     public function ingredients(): BelongsToMany
     {
         return $this->belongsToMany(Ingredient::class, 'product_ingredient')
-            ->withPivot('quantity', 'unit')
+            ->withPivot('id', 'quantity', 'unit')
             ->withTimestamps();
     }
 }

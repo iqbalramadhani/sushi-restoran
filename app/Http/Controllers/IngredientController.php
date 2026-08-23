@@ -44,7 +44,8 @@ class IngredientController extends Controller
         $validated['min_stock'] = $validated['min_stock'] ?? 0;
         $this->service->create($validated);
 
-        return to_route('ingredients.index')->with('success', 'Bahan baku berhasil ditambahkan.');
+        session()->flash('success', 'Bahan baku berhasil ditambahkan.');
+        return inertia()->location(route('ingredients.index'));
     }
 
     public function edit(int $id)
@@ -68,12 +69,14 @@ class IngredientController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $this->service->update($id, $validated);
 
-        return to_route('ingredients.index')->with('success', 'Bahan baku berhasil diperbarui.');
+        session()->flash('success', 'Bahan baku berhasil diperbarui.');
+        return inertia()->location(route('ingredients.index'));
     }
 
     public function destroy(int $id)
     {
         $this->service->delete($id);
-        return to_route('ingredients.index')->with('success', 'Bahan baku berhasil dihapus.');
+        session()->flash('success', 'Bahan baku berhasil dihapus.');
+        return inertia()->location(route('ingredients.index'));
     }
 }

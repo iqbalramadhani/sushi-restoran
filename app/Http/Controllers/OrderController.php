@@ -42,7 +42,8 @@ class OrderController extends Controller
             $validated['items']
         );
 
-        return to_route('orders.show', $order->id)->with('success', 'Order created successfully.');
+        session()->flash('success', 'Order created successfully.');
+        return inertia()->location(route('orders.show', $order->id));
     }
 
     public function show(int $id)
@@ -54,18 +55,21 @@ class OrderController extends Controller
     public function process(int $id)
     {
         $this->service->processOrder($id);
-        return to_route('orders.index')->with('success', 'Order is now being processed.');
+        session()->flash('success', 'Order is now being processed.');
+        return inertia()->location(route('orders.index'));
     }
 
     public function complete(int $id)
     {
         $this->service->completeOrder($id);
-        return to_route('orders.index')->with('success', 'Order completed.');
+        session()->flash('success', 'Order completed.');
+        return inertia()->location(route('orders.index'));
     }
 
     public function cancel(int $id)
     {
         $this->service->cancelOrder($id);
-        return to_route('orders.index')->with('success', 'Order cancelled.');
+        session()->flash('success', 'Order cancelled.');
+        return inertia()->location(route('orders.index'));
     }
 }

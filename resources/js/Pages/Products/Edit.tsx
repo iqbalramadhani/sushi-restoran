@@ -11,10 +11,20 @@ interface Props {
 
 export default function ProductEdit({ product, categories, ingredients }: Props) {
     const initialIngredients: ProductIngredient[] = product.ingredients ?? [];
-    const [form, setForm] = useState({ category_id: product.category_id ?? '', name: product.name ?? '', price: product.price ?? '', description: product.description ?? '', is_available: product.is_available ?? true });
+    const [form, setForm] = useState({
+        category_id: product.category_id ?? '',
+        name: product.name ?? '',
+        price: Math.round(Number(product.price ?? 0)).toLocaleString('id-ID'),
+        description: product.description ?? '',
+        is_available: product.is_available ?? true,
+    });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [ingredientRows, setIngredientRows] = useState<{ ingredient_id: string; quantity: string; id?: number }[]>(
-        initialIngredients.map(ing => ({ ingredient_id: String(ing.ingredient?.id ?? ing.ingredient_id), quantity: String(ing.quantity), id: ing.id }))
+        initialIngredients.map(ing => ({
+            ingredient_id: String(ing.id),
+            quantity: String(Math.round(Number(ing.pivot?.quantity ?? 0))),
+            id: ing.pivot?.id,
+        }))
     );
 
     const handleChange = (field: string, value: string | boolean) => {
@@ -22,20 +32,17 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
-    const formatPrice = (value: string) => {
-        const cleaned = value.replace(/\D/g, '');
-        return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    };
-
-    const parsePrice = (value: string) => value.replace(/\./g, '').replace(/\D/g, '');
-
-    const handlePriceFocus = () => {
-        setForm(prev => ({ ...prev, price: parsePrice(prev.price) }));
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const raw = e.target.value.replace(/\D/g, '');
+        const num = Number(raw);
+        const formatted = isNaN(num) ? '' : Math.round(num).toLocaleString('id-ID');
+        setForm(prev => ({ ...prev, price: formatted }));
     };
 
     const handlePriceBlur = () => {
-        const raw = parsePrice(form.price);
-        setForm(prev => ({ ...prev, price: raw ? formatPrice(raw) : '' }));
+        const raw = form.price.replace(/\D/g, '');
+        const num = Number(raw);
+        setForm(prev => ({ ...prev, price: isNaN(num) ? '' : Math.round(num).toLocaleString('id-ID') }));
     };
 
     const handleIngredientChange = (index: number, field: string, value: string) => {
@@ -56,7 +63,7 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
         e.preventDefault();
         const payload = {
             ...form,
-            price: parsePrice(form.price),
+            price: parseInt(form.price.replace(/\./g, ''), 10),
             ingredients: ingredientRows.filter(r => r.ingredient_id),
         };
         router.put(route('products.update', product.id), payload, { preserveScroll: true, onError: (err) => setErrors(err) });
@@ -87,7 +94,7 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Harga (Rp)</label>
-                                            <input type="text" value={form.price} onChange={(e) => handleChange('price', e.target.value)} onFocus={handlePriceFocus} onBlur={handlePriceBlur} inputMode="numeric" pattern="[0-9]*" placeholder="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            <input type="text" value={form.price} onChange={handlePriceChange} onBlur={handlePriceBlur} inputMode="numeric" placeholder="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                             {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
                                         </div>
                                         <div>
@@ -98,12 +105,12 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
                                             <label className="block text-sm font-medium text-gray-700">Bahan Baku</label>
                                             <div className="mt-2 space-y-2">
                                                 {ingredientRows.map((row, index) => (
-                                                    <div key={index} className="flex gap-2 items-start">
+                                                    <div key={index} className="flex gap-2 items-center">
                                                         <select value={row.ingredient_id} onChange={(e) => handleIngredientChange(index, 'ingredient_id', e.target.value)} className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                                             <option value="">Pilih Bahan Baku</option>
                                                             {ingredients.map(ing => <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>)}
                                                         </select>
-                                                        <input type="number" value={row.quantity} onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)} placeholder="Qty" min="0" step="0.01" className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                                        <input type="number" value={row.quantity} onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)} placeholder="Qty" min="0" step="1" className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                                         <button type="button" onClick={() => removeIngredientRow(index)} className="px-2 text-red-600 hover:text-red-800">✕</button>
                                                     </div>
                                                 ))}

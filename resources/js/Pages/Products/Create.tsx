@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Category, Ingredient } from '@/types';
@@ -15,26 +15,24 @@ export default function ProductCreate({ categories, ingredients }: Props) {
     const [newCategory, setNewCategory] = useState({ name: '', description: '' });
     const [categoryErrors, setCategoryErrors] = useState<Record<string, string>>({});
     const [ingredientRows, setIngredientRows] = useState<{ ingredient_id: string; quantity: string }[]>([{ ingredient_id: '', quantity: '' }]);
+    const priceInputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (field: string, value: string | boolean) => {
         setForm(prev => ({ ...prev, [field]: value }));
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
-    const formatPrice = (value: string) => {
-        const cleaned = value.replace(/\D/g, '');
-        return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    };
-
-    const parsePrice = (value: string) => value.replace(/\./g, '').replace(/\D/g, '');
-
-    const handlePriceFocus = () => {
-        setForm(prev => ({ ...prev, price: parsePrice(prev.price) }));
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const raw = e.target.value.replace(/\D/g, '');
+        const num = Number(raw);
+        const formatted = isNaN(num) ? '' : Math.round(num).toLocaleString('id-ID');
+        setForm(prev => ({ ...prev, price: formatted }));
     };
 
     const handlePriceBlur = () => {
-        const raw = parsePrice(form.price);
-        setForm(prev => ({ ...prev, price: raw ? formatPrice(raw) : '' }));
+        const raw = form.price.replace(/\D/g, '');
+        const num = Number(raw);
+        setForm(prev => ({ ...prev, price: isNaN(num) ? '' : Math.round(num).toLocaleString('id-ID') }));
     };
 
     const handleIngredientChange = (index: number, field: string, value: string) => {
@@ -56,7 +54,7 @@ export default function ProductCreate({ categories, ingredients }: Props) {
         e.preventDefault();
         const payload = {
             ...form,
-            price: parsePrice(form.price),
+            price: parseInt(form.price.replace(/\./g, ''), 10),
             ingredients: ingredientRows.filter(r => r.ingredient_id),
         };
         router.post(route('products.store'), payload, { preserveScroll: true, onError: (err) => setErrors(err), onSuccess: () => { setForm({ category_id: '', name: '', price: '', description: '', is_available: true }); setIngredientRows([{ ingredient_id: '', quantity: '' }]); } });
@@ -108,7 +106,7 @@ export default function ProductCreate({ categories, ingredients }: Props) {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Harga (Rp)</label>
-                                            <input type="text" value={form.price} onChange={(e) => handleChange('price', e.target.value)} onFocus={handlePriceFocus} onBlur={handlePriceBlur} inputMode="numeric" pattern="[0-9]*" placeholder="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                                            <input ref={priceInputRef} type="text" value={form.price} onChange={handlePriceChange} onBlur={handlePriceBlur} inputMode="numeric" placeholder="0" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                             {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
                                         </div>
                                         <div>
