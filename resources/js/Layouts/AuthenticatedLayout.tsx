@@ -44,6 +44,9 @@ export default function AuthenticatedLayout({ children, header }: Props) {
                                 <NavLink href={route('products.index')} active={route().current('products.*')}>
                                     Menu
                                 </NavLink>
+                                <NavLink href={route('ingredients.index')} active={route().current('ingredients.*')}>
+                                    Bahan Baku
+                                </NavLink>
                                 <NavLink href={route('tables.index')} active={route().current('tables.*')}>
                                     Meja
                                 </NavLink>

@@ -12,12 +12,12 @@ class ProductRepository implements RepositoryInterface
 
     public function all(): Collection
     {
-        return $this->model->with('category')->get();
+        return $this->model->with(['category', 'ingredients'])->get();
     }
 
     public function find(int $id): ?Product
     {
-        return $this->model->with('category')->find($id);
+        return $this->model->with(['category', 'ingredients'])->find($id);
     }
 
     public function create(array $data): Product
@@ -28,7 +28,19 @@ class ProductRepository implements RepositoryInterface
     public function update(int $id, array $data): bool
     {
         $product = $this->model->findOrFail($id);
-        return $product->update($data);
+        $product->update($data);
+
+        if (isset($data['ingredients'])) {
+            $product->ingredients()->detach();
+            foreach ($data['ingredients'] as $ing) {
+                $product->ingredients()->attach($ing['ingredient_id'], [
+                    'quantity' => $ing['quantity'] ?? 0,
+                    'unit' => $ing['unit'] ?? 'g',
+                ]);
+            }
+        }
+
+        return true;
     }
 
     public function delete(int $id): bool

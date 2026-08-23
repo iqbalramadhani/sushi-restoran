@@ -2,32 +2,32 @@
 
 namespace App\Repositories;
 
-use App\Models\Category;
+use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Collection;
 
-class CategoryRepository implements RepositoryInterface
+class IngredientRepository implements RepositoryInterface
 {
-    public function __construct(protected Category $model) {}
+    public function __construct(protected Ingredient $model) {}
 
     public function all(): Collection
     {
         return $this->model->get();
     }
 
-    public function find(int $id): ?Category
+    public function find(int $id): ?Ingredient
     {
         return $this->model->find($id);
     }
 
-    public function create(array $data): Category
+    public function create(array $data): Ingredient
     {
         return $this->model->create($data);
     }
 
     public function update(int $id, array $data): bool
     {
-        $category = $this->model->findOrFail($id);
-        return $category->update($data);
+        $ingredient = $this->model->findOrFail($id);
+        return $ingredient->update($data);
     }
 
     public function delete(int $id): bool

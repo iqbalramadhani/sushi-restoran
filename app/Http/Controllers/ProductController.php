@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Ingredient;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -22,6 +24,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Create', [
             'categories' => Category::all(),
+            'ingredients' => Ingredient::all(),
         ]);
     }
 
@@ -33,10 +36,20 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'is_available' => 'boolean',
+            'ingredients' => 'nullable|array',
+            'ingredients.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients.*.quantity' => 'nullable|numeric|min:0',
+            'ingredients.*.unit' => 'nullable|string|max:10',
         ]);
 
-        $validated['slug'] = \Str::slug($validated['name']);
-        $this->service->create($validated);
+        $validated['slug'] = Str::slug($validated['name']);
+        $product = $this->service->create($validated);
+
+        if (!empty($validated['ingredients'])) {
+            $product->ingredients()->syncWithoutDetaching(
+                collect($validated['ingredients'])->mapWithKeys(fn($ing) => [$ing['ingredient_id'] => ['quantity' => $ing['quantity'] ?? 0, 'unit' => $ing['unit'] ?? 'g']])->toArray()
+            );
+        }
 
         return to_route('products.index')->with('success', 'Product created successfully.');
     }
@@ -47,6 +60,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Edit', [
             'product' => $product,
             'categories' => Category::all(),
+            'ingredients' => Ingredient::all(),
         ]);
     }
 
@@ -58,9 +72,13 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'is_available' => 'boolean',
+            'ingredients' => 'nullable|array',
+            'ingredients.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients.*.quantity' => 'nullable|numeric|min:0',
+            'ingredients.*.unit' => 'nullable|string|max:10',
         ]);
 
-        $validated['slug'] = \Str::slug($validated['name']);
+        $validated['slug'] = Str::slug($validated['name']);
         $this->service->update($id, $validated);
 
         return to_route('products.index')->with('success', 'Product updated successfully.');

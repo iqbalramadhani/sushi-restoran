@@ -29,6 +29,7 @@ export interface Product {
     description: string | null;
     is_available: boolean;
     category?: Category;
+    ingredients?: ProductIngredient[];
     created_at: string;
     updated_at: string;
 }
@@ -50,6 +51,26 @@ export interface OrderItem {
     quantity: number;
     price: number;
     product?: Product;
+}
+
+export interface Ingredient {
+    id: number;
+    name: string;
+    slug: string;
+    unit: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface ProductIngredient {
+    id: number;
+    ingredient_id: number;
+    product_id: number;
+    quantity: number;
+    unit: string;
+    created_at: string;
+    updated_at: string;
+    ingredient?: Ingredient;
 }
 
 export interface Order {
