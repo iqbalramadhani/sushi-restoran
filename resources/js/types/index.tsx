@@ -83,15 +83,26 @@ export interface ProductLowStock {
     recipe_qty: number;
 }
 
-export interface ProductIngredient {
+export interface ProductIngredientPivot {
     id: number;
-    ingredient_id: number;
     product_id: number;
+    ingredient_id: number;
     quantity: number;
     unit: string;
     created_at: string;
     updated_at: string;
-    ingredient?: Ingredient;
+}
+
+export interface ProductIngredient {
+    id: number;
+    name: string;
+    slug: string;
+    unit: string;
+    stock: number;
+    min_stock: number;
+    created_at: string;
+    updated_at: string;
+    pivot: ProductIngredientPivot;
 }
 
 export interface Order {

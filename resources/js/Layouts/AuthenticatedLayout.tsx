@@ -50,6 +50,12 @@ export default function AuthenticatedLayout({ children, header }: Props) {
                                 <NavLink href={route('tables.index')} active={route().current('tables.*')}>
                                     Meja
                                 </NavLink>
+                                <NavLink href={route('units.index')} active={route().current('units.*')}>
+                                    Satuan
+                                </NavLink>
+                                <NavLink href={route('categories.index')} active={route().current('categories.*')}>
+                                    Kategori
+                                </NavLink>
                             </div>
                         </div>
 

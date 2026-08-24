@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function IngredientEdit({ ingredient, units }: Props) {
-    const [form, setForm] = useState({ name: ingredient.name, unit: ingredient.unit, stock: ingredient.stock ?? 0, min_stock: ingredient.min_stock ?? 0 });
+    const [form, setForm] = useState({ name: ingredient.name, unit: ingredient.unit, stock: parseFloat(ingredient.stock ?? 0), min_stock: parseFloat(ingredient.min_stock ?? 0) });
     const [customUnit, setCustomUnit] = useState('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 

@@ -53,7 +53,7 @@ class ProductController extends Controller
         }
 
         session()->flash('success', 'Product created successfully.');
-        return inertia()->location(route('products.index'));
+        return redirect()->route('products.index');
     }
 
     public function edit(int $id)
@@ -84,13 +84,13 @@ class ProductController extends Controller
         $this->service->update($id, $validated);
 
         session()->flash('success', 'Product updated successfully.');
-        return inertia()->location(route('products.index'));
+        return redirect()->route('products.index');
     }
 
     public function destroy(int $id)
     {
         $this->service->delete($id);
         session()->flash('success', 'Product deleted successfully.');
-        return inertia()->location(route('products.index'));
+        return redirect()->route('products.index');
     }
 }

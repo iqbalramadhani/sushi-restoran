@@ -21,14 +21,14 @@ class TableController extends Controller
     {
         $this->service->occupy($id);
         session()->flash('success', 'Table is now occupied.');
-        return inertia()->location(route('tables.index'));
+        return redirect()->route('tables.index');
     }
 
     public function free(int $id)
     {
         $this->service->free($id);
         session()->flash('success', 'Table is now available.');
-        return inertia()->location(route('tables.index'));
+        return redirect()->route('tables.index');
     }
 
     public function create()
@@ -46,7 +46,7 @@ class TableController extends Controller
 
         $this->service->create($validated);
         session()->flash('success', 'Table created successfully.');
-        return inertia()->location(route('tables.index'));
+        return redirect()->route('tables.index');
     }
 
     public function edit(int $id)
@@ -66,13 +66,13 @@ class TableController extends Controller
 
         $this->service->update($id, $validated);
         session()->flash('success', 'Table updated successfully.');
-        return inertia()->location(route('tables.index'));
+        return redirect()->route('tables.index');
     }
 
     public function destroy(int $id)
     {
         $this->service->destroy($id);
         session()->flash('success', 'Table deleted successfully.');
-        return inertia()->location(route('tables.index'));
+        return redirect()->route('tables.index');
     }
 }

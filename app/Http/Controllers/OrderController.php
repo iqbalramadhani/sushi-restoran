@@ -43,7 +43,7 @@ class OrderController extends Controller
         );
 
         session()->flash('success', 'Order created successfully.');
-        return inertia()->location(route('orders.show', $order->id));
+        return redirect()->route('orders.show', $order->id);
     }
 
     public function show(int $id)
@@ -56,20 +56,20 @@ class OrderController extends Controller
     {
         $this->service->processOrder($id);
         session()->flash('success', 'Order is now being processed.');
-        return inertia()->location(route('orders.index'));
+        return redirect()->route('orders.index');
     }
 
     public function complete(int $id)
     {
         $this->service->completeOrder($id);
         session()->flash('success', 'Order completed.');
-        return inertia()->location(route('orders.index'));
+        return redirect()->route('orders.index');
     }
 
     public function cancel(int $id)
     {
         $this->service->cancelOrder($id);
         session()->flash('success', 'Order cancelled.');
-        return inertia()->location(route('orders.index'));
+        return redirect()->route('orders.index');
     }
 }

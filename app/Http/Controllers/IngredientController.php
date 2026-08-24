@@ -45,7 +45,7 @@ class IngredientController extends Controller
         $this->service->create($validated);
 
         session()->flash('success', 'Bahan baku berhasil ditambahkan.');
-        return inertia()->location(route('ingredients.index'));
+        return redirect()->route('ingredients.index');
     }
 
     public function edit(int $id)
@@ -70,13 +70,13 @@ class IngredientController extends Controller
         $this->service->update($id, $validated);
 
         session()->flash('success', 'Bahan baku berhasil diperbarui.');
-        return inertia()->location(route('ingredients.index'));
+        return redirect()->route('ingredients.index');
     }
 
     public function destroy(int $id)
     {
         $this->service->delete($id);
         session()->flash('success', 'Bahan baku berhasil dihapus.');
-        return inertia()->location(route('ingredients.index'));
+        return redirect()->route('ingredients.index');
     }
 }

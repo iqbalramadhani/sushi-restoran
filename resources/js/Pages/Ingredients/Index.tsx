@@ -42,10 +42,10 @@ export default function IngredientIndex({ ingredients, success }: Props) {
                                                 <td className="px-6 py-4 font-medium text-gray-900">{ingredient.name}</td>
                                                 <td className="px-6 py-4 text-gray-500">{ingredient.unit}</td>
                                                 <td className={`px-6 py-4 font-semibold ${ingredient.stock <= ingredient.min_stock && ingredient.min_stock > 0 ? 'text-red-600' : 'text-gray-700'}`}>
-                                                    {Number(ingredient.stock).toLocaleString('id-ID', { maximumFractionDigits: 2 })}
+                                                    {parseFloat(ingredient.stock).toLocaleString('id-ID')}
                                                 </td>
                                                 <td className="px-6 py-4 text-gray-500">
-                                                    {ingredient.min_stock > 0 ? Number(ingredient.min_stock).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : '-'}
+                                                    {ingredient.min_stock > 0 ? parseFloat(ingredient.min_stock).toLocaleString('id-ID') : '-'}
                                                 </td>
                                                 <td className="px-6 py-4 text-right space-x-2">
                                                     <Link href={route('ingredients.edit', ingredient.id)} className="text-blue-600 hover:text-blue-800">Ubah</Link>

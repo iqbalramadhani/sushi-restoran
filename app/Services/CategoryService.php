@@ -2,25 +2,25 @@
 
 namespace App\Services;
 
-use App\Repositories\UnitRepository;
+use App\Repositories\CategoryRepository;
 
-class UnitService
+class CategoryService
 {
-    public function __construct(protected UnitRepository $repository) {}
+    public function __construct(protected CategoryRepository $repository) {}
 
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->repository->all();
     }
 
+    public function findById(int $id): ?\App\Models\Category
+    {
+        return $this->repository->find($id);
+    }
+
     public function create(array $data): object
     {
         return $this->repository->create($data);
-    }
-
-    public function findById(int $id): ?\App\Models\Unit
-    {
-        return $this->repository->find($id);
     }
 
     public function update(int $id, array $data): bool

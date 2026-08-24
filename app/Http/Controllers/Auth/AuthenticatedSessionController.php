@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if ($request->wantsJson()) {
-            return inertia()->location(route('dashboard', absolute: false));
+            return redirect()->route('dashboard', absolute: false);
         }
 
         return redirect()->intended(route('dashboard', absolute: false));
@@ -51,7 +50,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         if ($request->wantsJson()) {
-            return inertia()->location(route('login'));
+            return redirect()->route('login');
         }
 
         return redirect('/');

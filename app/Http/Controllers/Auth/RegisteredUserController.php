@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
         ]);
 
         if ($request->wantsJson()) {
-            return inertia()->location(route('register.success'));
+            return redirect()->route('register.success');
         }
         return redirect()->route('register.success');
     }

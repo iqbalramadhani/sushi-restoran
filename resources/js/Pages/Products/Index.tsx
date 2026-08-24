@@ -1,4 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Product, ProductLowStock } from '@/types';
 
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default function ProductIndex({ products, low_stock_products = [], success }: Props) {
+    const [openId, setOpenId] = useState<number | null>(null);
+
     const handleDelete = (id: number) => {
         if (!confirm('Yakin ingin menghapus produk ini?')) return;
         router.delete(route('products.destroy', id), { preserveScroll: true });
@@ -28,7 +31,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                         <div className="bg-white shadow-sm sm:rounded-lg">
                             <div className="p-6 flex justify-between items-center">
                                 <h3 className="text-lg font-semibold text-gray-800">Daftar Menu</h3>
-                                <Link href={route('products.create')} className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700">+ Tambah Produk</Link>
+                                <Link href={route('products.create')} className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700">+ Tambah Menu</Link>
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm text-left">
@@ -43,9 +46,11 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
-                                        {products.map((product) => {
+                                        {products.flatMap((product) => {
                                             const lowStockItems = getProductLowStock(product.id);
-                                            return (
+                                            const isOpen = openId === product.id;
+                                            const hasIngredients = product.ingredients && product.ingredients.length > 0;
+                                            return [
                                                 <tr key={product.id} className="hover:bg-gray-50">
                                                     <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
                                                     <td className="px-6 py-4 text-gray-500">{product.category?.name ?? '-'}</td>
@@ -64,7 +69,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                                                             ⚠ {item.ingredient_name}
                                                                         </span>
                                                                         <span className="text-xs text-red-600 font-medium">
-                                                                            {Number(item.stock).toLocaleString('id-ID', { maximumFractionDigits: 2 })} {item.unit}
+                                                                            {Number(item.stock).toLocaleString('id-ID')} {item.unit}
                                                                         </span>
                                                                     </div>
                                                                 ))}
@@ -73,12 +78,39 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                                             <span className="text-gray-400 text-xs">-</span>
                                                         )}
                                                     </td>
-                                                    <td className="px-6 py-4 text-right space-x-2">
-                                                        <Link href={route('products.edit', product.id)} className="text-blue-600 hover:text-blue-800">Ubah</Link>
-                                                        <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-800">Hapus</button>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); setOpenId(isOpen ? null : product.id); }}
+                                                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors mr-2"
+                                                        >
+                                                            Bahan Baku
+                                                            <svg className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                            </svg>
+                                                        </button>
+                                                        <Link href={route('products.edit', product.id)} className="text-blue-600 hover:text-blue-800 mr-3">Ubah</Link>
+                                                        <button onClick={(e) => { e.stopPropagation(); handleDelete(product.id); }} className="text-red-600 hover:text-red-800">Hapus</button>
                                                     </td>
-                                                </tr>
-                                            );
+                                                </tr>,
+                                                isOpen && hasIngredients && (
+                                                    <tr key={`detail-${product.id}`}>
+                                                        <td colSpan={6} className="px-6 py-0">
+                                                            <div className="px-6 py-3 bg-blue-50 border-t border-blue-100">
+                                                                <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">Bahan Baku</p>
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {product.ingredients.map((ing) => (
+                                                                        <span key={ing.id} className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white text-gray-700 border border-blue-200 shadow-sm">
+                                                                            <span className="font-medium text-blue-700">{ing.name}</span>
+                                                                            <span className="mx-1 text-gray-300">·</span>
+                                                                            <span>{Number(ing.pivot?.quantity ?? 0).toLocaleString('id-ID')} {ing.pivot?.unit ?? ing.unit ?? '-'}</span>
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ),
+                                            ];
                                         })}
                                         {products.length === 0 && (
                                             <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">Belum ada produk.</td></tr>
