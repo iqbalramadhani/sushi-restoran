@@ -25,6 +25,14 @@ on:
         type: string
         default: 'restoran-app'
     secrets:
+      vps-host:
+        required: false
+      vps-user:
+        required: false
+      vps-port:
+        required: false
+      docker-image:
+        required: false
       ssh-private-key:
         required: false
 
