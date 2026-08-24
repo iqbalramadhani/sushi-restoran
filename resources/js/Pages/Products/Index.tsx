@@ -20,6 +20,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
     const getProductLowStock = (productId: number): ProductLowStock[] => {
         return low_stock_products.filter(ps => ps.product_id === productId);
     };
+    
 
     return (
         <>
