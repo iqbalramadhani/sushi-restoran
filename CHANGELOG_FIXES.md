@@ -5,6 +5,18 @@ Berlaku untuk semua bug fix, regresi, dan catatan penting implementasi.
 
 ---
 
+### Fix #9 — TypeError: Cannot read properties of undefined (reading 'ingredients') di Order Create
+Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
+2026-08-24 · resources/js/Pages/Orders/Create.tsx · `Uncaught TypeError: Cannot read properties of undefined (reading 'ingredients')` di Create.tsx:42 saat render awal · Default `selectedProductId = 0`, sehingga `products.find(p => p.id === 0)` return `undefined`, lalu `getMaxPossibleQty(undefined)` akses `.ingredients` → crash · Ganti `getMaxPossibleQty(products.find(p => p.id === selectedProductId)!)` dengan IIFE yang melakukan null-check sebelum memanggil fungsi · ✅ Build bersih · Selalu defensive check saat mengakses properti dari hasil `find()` yang bisa return undefined · Create.tsx ingredient · Belum deploy
+
+---
+
+### Fix #8 — Sinkronisasi Stok Bahan Baku dengan Order + Perbaikan Tampilan Halaman Create Order
+Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
+2026-08-24 · app/Services/OrderService.php, app/Http/Controllers/OrderController.php, resources/js/Pages/Orders/Create.tsx · (1) Order tetap dibuat meski stok bahan baku tidak cukup karena validasi stock tidak dilakukan sebelum order dibuat, (2) Cancel order tidak mengembalikan stok bahan baku yang sudah dipotong, (3) Frontend tidak menampilkan info stok sehingga user tidak tahu apakah bahan cukup sebelum order · Akar: `OrderService::deductIngredients()` memang sudah ada tapi hanya mengurangi stok tanpa validasi beforehand, dan `cancelOrder()` hanya mengubah status tanpa restore stok. `create()` di controller tidak eager-load `ingredients` sehingga frontend tidak punya data stok. · Fix: (1) Tambah method `validateIngredients()` di OrderService yang memeriksa stock setiap bahan baku sebelum order dibuat, throw Exception jika kurang, (2) Bungkus `createOrder()` dengan `DB::transaction()` agar atomik, (3) Tambah restore stock di `cancelOrder()` menggunakan `increment()` dalam transaction, (4) Update `OrderController::store()` catch Exception dan kembalikan `back()->withErrors(['stock' => ...])`, (5) Update `create()` controller eager-load `ingredients` pada products, (6) Redesign UI Create.tsx: section meja terpisah, quick add panel, grid produk dengan badge stock & status warna (hijau=k足够, kuning=rendah, merah=habis), sidebar keranjang dengan kontrol qty (+/-) per item, warning stock inline. · ✅ Build bersih, 1/1 order test passed · Stock validation harus dilakukan BEFORE create order, bukan after. Transaction penting agar order + deduction atomik atau rollback bersamaan. Cancel order harus reverse semua stock deduction · Order stock validation · Belum deploy
+
+---
+
 ### ⚠️ PENTING — `migrate:fresh` DILARANG di Local MAUPUN Production
 **Command ini akan MENGHAPUS SEMUA DATA, jangan pernah dijalankan!**
 
