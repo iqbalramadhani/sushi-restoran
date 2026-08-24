@@ -11,9 +11,4 @@ jobs:
     uses: ./.github/workflows/laravel-base.yml
     with:
       db-database: restoran_test
-      vps-host: ${{ vars.VPS_HOST }}
-      vps-user: ${{ vars.VPS_USER }}
-      vps-port: ${{ vars.VPS_PORT }}
-      docker-image: ${{ vars.DOCKER_IMAGE }}
-    secrets:
-      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    secrets: inherit
