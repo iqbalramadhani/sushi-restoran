@@ -12,15 +12,6 @@ on:
       db-database:
         type: string
         default: 'restoran_test'
-      vps-host:
-        type: string
-        default: ''
-      vps-user:
-        type: string
-        default: 'root'
-      vps-port:
-        type: string
-        default: '22'
       docker-image:
         type: string
         default: 'restoran-app'
@@ -30,8 +21,6 @@ on:
       vps-user:
         required: false
       vps-port:
-        required: false
-      docker-image:
         required: false
       ssh-private-key:
         required: false
@@ -122,7 +111,7 @@ jobs:
   build-and-deploy:
     name: Build & Deploy
     needs: test
-    if: ${{ inputs.vps-host != '' && github.ref == 'refs/heads/main' }}
+    if: ${{ secrets.vps-host != '' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -154,10 +143,10 @@ jobs:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ inputs.vps-host }}
-          username: ${{ inputs.vps-user }}
+          host: ${{ secrets.vps-host }}
+          username: ${{ secrets.vps-user }}
           key: ${{ secrets.ssh-private-key }}
-          port: ${{ inputs.vps-port }}
+          port: ${{ secrets.vps-port }}
           script: |
             cd /opt/restoran
 
