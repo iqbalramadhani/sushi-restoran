@@ -19,6 +19,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
+COPY vite.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 COPY resources/ resources/
 RUN npm run build
 
