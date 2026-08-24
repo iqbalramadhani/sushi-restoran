@@ -4,10 +4,10 @@ services:
     container_name: restoran_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
       MYSQL_DATABASE: restoran
       MYSQL_USER: restoran
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
     volumes:
       - restoran_mysql_data:/var/lib/mysql
     networks:
