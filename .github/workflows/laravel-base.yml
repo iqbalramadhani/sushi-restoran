@@ -1,0 +1,160 @@
+name: Laravel Base CI
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        type: string
+        default: '8.3'
+      db-root-password:
+        type: string
+        default: 'password'
+      db-database:
+        type: string
+        default: 'restoran_test'
+      vps-host:
+        type: string
+        default: ''
+      vps-user:
+        type: string
+        default: 'root'
+      vps-port:
+        type: string
+        default: '22'
+      docker-image:
+        type: string
+        default: 'restoran-app'
+    secrets:
+      ssh-private-key:
+        required: false
+      docker-registry:
+        required: false
+      docker-registry-user:
+        required: false
+      docker-registry-password:
+        required: false
+      docker-env:
+        required: false
+
+env:
+  DOCKER_IMAGE: ${{ inputs.docker-image }}
+  GH_USER: ${{ github.actor }}
+  GHCR_REGISTRY: ghcr.io
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ inputs.db-root-password }}
+          MYSQL_DATABASE: ${{ inputs.db-database }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php-version }}
+          extensions: mbstring, zip, pdo_mysql, bcmath, gd
+          coverage: none
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copy Env
+        run: cp .env.example .env
+
+      - name: Generate Key
+        run: php artisan key:generate
+
+      - name: Run Migrations
+        run: php artisan migrate --force
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: ${{ inputs.db-database }}
+          DB_USERNAME: root
+          DB_PASSWORD: ${{ inputs.db-root-password }}
+
+      - name: Run Tests
+        run: php artisan test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: ${{ inputs.db-database }}
+          DB_USERNAME: root
+          DB_PASSWORD: ${{ inputs.db-root-password }}
+
+  build-and-deploy:
+    name: Build & Deploy
+    needs: test
+    if: ${{ inputs.vps-host != '' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ secrets.docker-registry-user || env.GH_USER }}
+          password: ${{ secrets.docker-registry-password || secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: production
+          push: true
+          tags: |
+            ${{ env.GHCR_REGISTRY }}/${{ env.GH_USER }}/${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+            ${{ env.GHCR_REGISTRY }}/${{ env.GH_USER }}/${{ env.DOCKER_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ inputs.vps-host }}
+          username: ${{ inputs.vps-user }}
+          key: ${{ secrets.ssh-private-key }}
+          port: ${{ inputs.vps-port }}
+          script: |
+            cd /opt/restoran
+
+            if [ -n "${{ secrets.docker-env }}" ]; then
+              echo "${{ secrets.docker-env }}" > .env
+            fi
+
+            docker compose -f docker-compose.prod.yml pull
+
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate
+
+            docker image prune -f -a || true

@@ -1,0 +1,4 @@
+include:
+  - docker/base.yml
+  - docker/nginx.yml
+  - docker/app.yml

@@ -1,0 +1,20 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    uses: ./.github/workflows/laravel-base.yml
+    with:
+      db-database: restoran_test
+      vps-host: ${{ secrets.VPS_HOST }}
+      vps-user: ${{ secrets.VPS_USER }}
+      vps-port: ${{ secrets.VPS_PORT }}
+      docker-image: ${{ secrets.DOCKER_IMAGE }}
+    secrets:
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      docker-env: ${{ secrets.DOCKER_ENV }}

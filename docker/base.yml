@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: restoran_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_DATABASE: restoran
+      MYSQL_USER: restoran
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - restoran_mysql_data:/var/lib/mysql
+    networks:
+      - restoran
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: restoran_redis
+    restart: unless-stopped
+    volumes:
+      - restoran_redis_data:/data
+    networks:
+      - restoran
+
+networks:
+  restoran:
+    driver: bridge
+
+volumes:
+  restoran_mysql_data:
+  restoran_redis_data:

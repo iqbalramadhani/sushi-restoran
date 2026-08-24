@@ -1,0 +1,16 @@
+node_modules
+vendor
+.git
+.github
+.env
+.DS_Store
+*.log
+.vscode
+.idea
+coverage
+.sql
+*.yaml
+*.yml
+!docker-compose*.yml
+README.md
+CHANGELOG_FIXES.md

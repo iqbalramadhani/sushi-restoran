@@ -1,0 +1,61 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: restoran_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=restoran
+      - DB_USERNAME=restoran
+      - DB_PASSWORD=restoran
+    ports:
+      - "8080:80"
+    networks:
+      - restoran
+
+  nginx:
+    image: nginx:alpine
+    container_name: restoran_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/public:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - restoran
+
+  mysql:
+    image: mysql:8.0
+    container_name: restoran_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: restoran
+      MYSQL_USER: restoran
+      MYSQL_PASSWORD: restoran
+    ports:
+      - "3306:3306"
+    volumes:
+      - restoran_mysql_data:/var/lib/mysql
+    networks:
+      - restoran
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  restoran:
+    driver: bridge
+
+volumes:
+  restoran_mysql_data:
