@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
         return Inertia::render('Orders/Create', [
             'tables' => \App\Models\Table::where('status', 'available')->get(),
-            'products' => \App\Models\Product::where('is_available', true)->with('category')->get(),
+            'products' => \App\Models\Product::where('is_available', true)->with('category', 'ingredients')->get(),
             'table_id' => $request->query('table_id'),
         ]);
     }
@@ -36,14 +36,18 @@ class OrderController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
-        $order = $this->service->createOrder(
-            $validated['table_id'],
-            $request->user()->id,
-            $validated['items']
-        );
+        try {
+            $order = $this->service->createOrder(
+                $validated['table_id'],
+                $request->user()->id,
+                $validated['items']
+            );
 
-        session()->flash('success', 'Order created successfully.');
-        return redirect()->route('orders.show', $order->id);
+            session()->flash('success', 'Order created successfully.');
+            return redirect()->route('orders.show', $order->id);
+        } catch (\Exception $e) {
+            return back()->withErrors(['stock' => $e->getMessage()]);
+        }
     }
 
     public function show(int $id)
@@ -68,8 +72,12 @@ class OrderController extends Controller
 
     public function cancel(int $id)
     {
-        $this->service->cancelOrder($id);
-        session()->flash('success', 'Order cancelled.');
+        try {
+            $this->service->cancelOrder($id);
+            session()->flash('success', 'Order cancelled.');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
         return redirect()->route('orders.index');
     }
 }
