@@ -33,8 +33,6 @@ on:
         required: false
       docker-registry-password:
         required: false
-      docker-env:
-        required: false
 
 env:
   DOCKER_IMAGE: ${{ inputs.docker-image }}
@@ -149,12 +147,16 @@ jobs:
           script: |
             cd /opt/restoran
 
-            if [ -n "${{ secrets.docker-env }}" ]; then
-              echo "${{ secrets.docker-env }}" > .env
+            # Pull latest code (kecuali .env, itu manual di server)
+            git pull origin main --ff-only
+
+            # Pastikan .env production ada
+            if [ ! -f .env ]; then
+              echo "ERROR: .env not found on server. Create it manually with: cp .env.production.example .env"
+              exit 1
             fi
 
-            docker compose -f docker-compose.prod.yml pull
-
+            # Restart service dengan env terbaru (tanpa rebuild image)
             docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate
 
             docker image prune -f -a || true

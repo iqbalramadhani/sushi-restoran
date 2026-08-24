@@ -17,4 +17,3 @@ jobs:
       docker-image: ${{ secrets.DOCKER_IMAGE }}
     secrets:
       ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      docker-env: ${{ secrets.DOCKER_ENV }}
