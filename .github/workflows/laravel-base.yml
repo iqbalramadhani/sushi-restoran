@@ -122,7 +122,7 @@ jobs:
   build-and-deploy:
     name: Build & Deploy
     needs: test
-    if: ${{ inputs.vps-host != '' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ inputs.vps-host != '' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
