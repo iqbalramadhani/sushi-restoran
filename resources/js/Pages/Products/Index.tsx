@@ -102,7 +102,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                                                         <span key={ing.id} className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white text-gray-700 border border-blue-200 shadow-sm">
                                                                             <span className="font-medium text-blue-700">{ing.name}</span>
                                                                             <span className="mx-1 text-gray-300">·</span>
-                                                                            <span>{Number(ing.pivot?.quantity ?? 0).toLocaleString('id-ID')} {ing.pivot?.unit ?? ing.unit ?? '-'}</span>
+                                                                            <span>{Number(ing.pivot?.quantity ?? 0).toLocaleString('id-ID')} {ing.unit ?? ing.pivot?.unit ?? '-'}</span>
                                                                         </span>
                                                                     ))}
                                                                 </div>

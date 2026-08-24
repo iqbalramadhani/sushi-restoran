@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SearchableSelect from '@/Components/SearchableSelect';
 import { Category, Ingredient, Product, ProductIngredient } from '@/types';
 
 interface Props {
@@ -81,10 +82,12 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
                                     <div className="space-y-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Kategori</label>
-                                            <select value={form.category_id} onChange={(e) => handleChange('category_id', e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                                <option value="">Pilih Kategori</option>
-                                                {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                                            </select>
+                                            <SearchableSelect
+                                                options={categories.map(c => ({ id: c.id, label: c.name }))}
+                                                value={form.category_id}
+                                                onChange={(v) => handleChange('category_id', v)}
+                                                placeholder="Cari atau pilih kategori..."
+                                            />
                                             {errors.category_id && <p className="mt-1 text-sm text-red-600">{errors.category_id}</p>}
                                         </div>
                                         <div>
@@ -106,10 +109,13 @@ export default function ProductEdit({ product, categories, ingredients }: Props)
                                             <div className="mt-2 space-y-2">
                                                 {ingredientRows.map((row, index) => (
                                                     <div key={index} className="flex gap-2 items-center">
-                                                        <select value={row.ingredient_id} onChange={(e) => handleIngredientChange(index, 'ingredient_id', e.target.value)} className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                                            <option value="">Pilih Bahan Baku</option>
-                                                            {ingredients?.map(ing => <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>)}
-                                                        </select>
+                                                        <SearchableSelect
+                                                            options={ingredients.map(i => ({ id: i.id, label: `${i.name} (${i.unit})` }))}
+                                                            value={row.ingredient_id}
+                                                            onChange={(v) => handleIngredientChange(index, 'ingredient_id', v)}
+                                                            placeholder="Cari bahan baku..."
+                                                            className="flex-1"
+                                                        />
                                                         <input type="number" value={row.quantity} onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)} placeholder="Qty" min="0" step="1" className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                                         <button type="button" onClick={() => removeIngredientRow(index)} className="px-2 text-red-600 hover:text-red-800">✕</button>
                                                     </div>
