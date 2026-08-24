@@ -8,7 +8,7 @@ interface Props {
     ingredients: Ingredient[];
 }
 
-export default function ProductCreate({ categories, ingredients }: Props) {
+export default function ProductCreate({ categories = [], ingredients = [] }: Props) {
     const [form, setForm] = useState({ category_id: '', name: '', price: '', description: '', is_available: true });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -120,7 +120,7 @@ export default function ProductCreate({ categories, ingredients }: Props) {
                                                     <div key={index} className="flex gap-2 items-center">
                                                         <select value={row.ingredient_id} onChange={(e) => handleIngredientChange(index, 'ingredient_id', e.target.value)} className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                                             <option value="">Pilih Bahan Baku</option>
-                                                            {ingredients.map(ing => <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>)}
+                                                            {ingredients?.map(ing => <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>)}
                                                         </select>
                                                         <input type="number" value={row.quantity} onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)} placeholder="Qty" min="0" step="0.01" className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                                                         <button type="button" onClick={() => removeIngredientRow(index)} className="px-2 text-red-600 hover:text-red-800">✕</button>
