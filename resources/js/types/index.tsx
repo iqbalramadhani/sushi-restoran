@@ -16,6 +16,7 @@ export interface Category {
     id: number;
     name: string;
     slug: string;
+    has_products: boolean;
     created_at: string;
     updated_at: string;
 }

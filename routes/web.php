@@ -46,8 +46,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::prefix('account-requests')->group(function () {
         Route::get('/', [AccountRequestController::class, 'index'])->name('account-requests.index');
         Route::get('/{accountRequest}', [AccountRequestController::class, 'show'])->name('account-requests.show');

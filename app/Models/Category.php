@@ -12,6 +12,13 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug', 'description'];
 
+    protected $appends = ['has_products'];
+
+    public function getHasProductsAttribute(): bool
+    {
+        return (bool) $this->products_count;
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

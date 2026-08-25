@@ -1,6 +1,15 @@
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Unit } from '@/types';
+import {
+    Plus,
+    Pencil,
+    Trash2,
+    CircleCheck,
+    Tag,
+    Ruler as RulerIcon,
+    Type,
+} from 'lucide-react';
 
 interface Props {
     units: Unit[];
@@ -20,9 +29,7 @@ export default function UnitIndex({ units, success }: Props) {
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         {success && (
                             <div className="mb-4 flex items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl">
-                                <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <CircleCheck className="w-5 h-5 flex-shrink-0" strokeWidth={2} />
                                 {success}
                             </div>
                         )}
@@ -30,14 +37,15 @@ export default function UnitIndex({ units, success }: Props) {
                         {/* Desktop Table */}
                         <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                <h3 className="text-lg font-semibold text-gray-800">Daftar Satuan</h3>
+                                <div className="flex items-center gap-2">
+                                    <RulerIcon className="w-5 h-5 text-orange-500" strokeWidth={2} />
+                                    <h3 className="text-lg font-semibold text-gray-800">Daftar Satuan</h3>
+                                </div>
                                 <Link
                                     href={route('units.create')}
                                     className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl text-sm font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-md"
                                 >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                    </svg>
+                                    <Plus className="w-4 h-4" strokeWidth={2.5} />
                                     Tambah Satuan
                                 </Link>
                             </div>
@@ -53,13 +61,26 @@ export default function UnitIndex({ units, success }: Props) {
                                     <tbody className="divide-y divide-gray-100">
                                         {units.map((unit) => (
                                             <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
-                                                <td className="px-6 py-4 font-medium text-gray-900">{unit.name}</td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-2.5">
+                                                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center flex-shrink-0">
+                                                            <RulerIcon className="w-4 h-4 text-white" strokeWidth={2} />
+                                                        </div>
+                                                        <span className="font-medium text-gray-900">{unit.name}</span>
+                                                    </div>
+                                                </td>
                                                 <td className="px-6 py-4">
                                                     <code className="text-xs bg-gray-100 px-2 py-1 rounded-lg text-gray-600">{unit.slug}</code>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <Link href={route('units.edit', unit.id)} className="text-blue-600 hover:text-blue-800 text-sm font-medium mr-3">Ubah</Link>
-                                                    <button onClick={() => handleDelete(unit.id)} className="text-red-600 hover:text-red-800 text-sm font-medium">Hapus</button>
+                                                    <Link href={route('units.edit', unit.id)} className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium mr-3">
+                                                        <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
+                                                        Ubah
+                                                    </Link>
+                                                    <button onClick={() => handleDelete(unit.id)} className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium">
+                                                        <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
+                                                        Hapus
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -67,9 +88,9 @@ export default function UnitIndex({ units, success }: Props) {
                                             <tr>
                                                 <td colSpan={3} className="px-6 py-16 text-center">
                                                     <div className="flex flex-col items-center gap-3">
-                                                        <svg className="w-12 h-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                        </svg>
+                                                        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center">
+                                                            <RulerIcon className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
+                                                        </div>
                                                         <p className="text-gray-500 font-medium">Belum ada satuan</p>
                                                         <p className="text-gray-400 text-sm">Tambahkan satuan untuk bahan baku</p>
                                                     </div>
@@ -89,9 +110,7 @@ export default function UnitIndex({ units, success }: Props) {
                                     href={route('units.create')}
                                     className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl text-sm font-semibold"
                                 >
-                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                    </svg>
+                                    <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
                                     Tambah
                                 </Link>
                             </div>
@@ -101,9 +120,7 @@ export default function UnitIndex({ units, success }: Props) {
                                         <div className="flex items-center justify-between mb-3">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                    </svg>
+                                                    <RulerIcon className="w-5 h-5 text-white" strokeWidth={2} />
                                                 </div>
                                                 <div>
                                                     <h4 className="font-semibold text-gray-900">{unit.name}</h4>
@@ -113,15 +130,11 @@ export default function UnitIndex({ units, success }: Props) {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Link href={route('units.edit', unit.id)} className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
-                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
+                                                <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
                                                 Ubah
                                             </Link>
                                             <button onClick={() => handleDelete(unit.id)} className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors">
-                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
+                                                <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
                                                 Hapus
                                             </button>
                                         </div>
@@ -129,9 +142,9 @@ export default function UnitIndex({ units, success }: Props) {
                                 ))}
                                 {units.length === 0 && (
                                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-                                        <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
+                                        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                                            <RulerIcon className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
+                                        </div>
                                         <p className="text-gray-500 font-medium">Belum ada satuan</p>
                                         <p className="text-gray-400 text-sm mt-1">Tambahkan satuan pertama</p>
                                     </div>

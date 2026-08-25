@@ -11,7 +11,7 @@ class CategoryRepository implements RepositoryInterface
 
     public function all(): Collection
     {
-        return $this->model->get();
+        return $this->model->withCount('products')->get();
     }
 
     public function find(int $id): ?Category

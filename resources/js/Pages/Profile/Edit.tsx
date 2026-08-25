@@ -126,27 +126,6 @@ export default function ProfileEdit({ mustVerifyEmail, status }: { mustVerifyEma
                             </form>
                         </div>
 
-                        {/* Danger Zone - Delete Account */}
-                        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden">
-                            <div className="px-6 py-4 border-b border-red-100 bg-red-50">
-                                <h3 className="font-semibold text-red-800">Zona Bahaya</h3>
-                                <p className="text-sm text-red-600 mt-0.5">Hapus akun secara permanen</p>
-                            </div>
-                            <div className="p-4 sm:p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-700">Setelah menghapus akun, semua data Anda akan dihapus secara permanen.</p>
-                                        <p className="text-xs text-gray-500 mt-1">Silakan hubungi admin jika Anda ingin membatalkan akun.</p>
-                                    </div>
-                                    <button
-                                        onClick={() => { if (confirm('Yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.')) router.delete(route('profile.destroy')); }}
-                                        className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-colors"
-                                    >
-                                        Hapus Akun
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </AuthenticatedLayout>
