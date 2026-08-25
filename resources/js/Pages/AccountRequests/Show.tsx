@@ -44,7 +44,7 @@ export default function AccountRequestShow({ request }: Props) {
             <Head title="Detail Pengajuan" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-4">
                         <Link
                             href={route('account-requests.index')}

@@ -25,7 +25,7 @@ export default function TableCreate() {
             <Head title="Tambah Meja" />
             <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Tambah Meja</h2>}>
                 <div className="py-6">
-                    <div className="mx-auto max-w-xl sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100">
                             <div className="px-6 py-4 border-b border-gray-100">
                                 <div className="flex items-center gap-3">

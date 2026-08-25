@@ -16,7 +16,7 @@ export default function OrderShow({ order }: Props) {
             <Head title={`Detail Order #${order.id}`} />
             <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Detail Order #{order.id}</h2>}>
                 <div className="py-6">
-                    <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white shadow-sm sm:rounded-lg">
                             <div className="p-6 border-b border-gray-100 flex justify-between items-start">
                                 <div>

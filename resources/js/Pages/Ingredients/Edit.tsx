@@ -47,7 +47,7 @@ export default function IngredientEdit({ ingredient, units }: Props) {
             <Head title="Edit Bahan Baku" />
             <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Edit Bahan Baku</h2>}>
                 <div className="py-6">
-                    <div className="mx-auto max-w-2xl sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white shadow-sm sm:rounded-lg">
                             <div className="p-6">
                                 <form onSubmit={handleSubmit}>

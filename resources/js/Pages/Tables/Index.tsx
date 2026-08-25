@@ -23,7 +23,7 @@ export default function TableIndex({ tables, success }: Props) {
             <Head title="Kelola Meja" />
             <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Kelola Meja</h2>}>
                 <div className="py-6">
-                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         {/* Success Alert */}
                         {success && (
                             <div className="mb-4 flex items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg">

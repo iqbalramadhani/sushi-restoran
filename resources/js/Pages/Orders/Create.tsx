@@ -143,9 +143,9 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
             <Head title="Buat Order" />
             <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Buat Order</h2>}>
                 <div className="py-6">
-                    <div className="mx-auto max-w-6xl sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                         {/* Table Selection */}
-                        <div className="bg-white shadow-sm sm:rounded-lg p-6 mb-6">
+                        <div className="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 mb-6">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,11 +169,11 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                             </select>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                             {/* Products Section */}
-                            <div className="lg:col-span-2 space-y-6">
+                            <div className="xl:col-span-2 space-y-6">
                                 {/* Quick Add */}
-                                <div className="bg-white shadow-sm sm:rounded-lg p-6">
+                                <div className="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                                             <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +185,7 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                                             <p className="text-xs text-gray-400 mt-0.5">Pilih produk dan tambahkan ke order</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3">
+                                    <div className="flex flex-col sm:flex-row gap-3">
                                         <select
                                             value={selectedProductId}
                                             onChange={(e) => {
@@ -217,12 +217,12 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                                             max={(() => { const p = products.find(pp => pp.id === selectedProductId); return p ? getMaxPossibleQty(p) : 999; })()}
                                             value={selectedQuantity}
                                             onChange={(e) => setSelectedQuantity(Math.max(1, Number(e.target.value)))}
-                                            className="w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 text-center"
+                                            className="w-full sm:w-20 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2.5 text-center"
                                         />
                                         <button
                                             onClick={addToOrder}
                                             disabled={!selectedProductId}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                            className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                                         >
                                             + Tambah
                                         </button>
@@ -231,12 +231,12 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
 
                                 {/* Product Grid */}
                                 {Object.entries(groupedProducts).map(([catId, group]) => (
-                                    <div key={catId} className="bg-white shadow-sm sm:rounded-lg p-6">
+                                    <div key={catId} className="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6">
                                         <div className="flex items-center gap-2 mb-4">
                                             <h5 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">{group.name}</h5>
                                             <span className="text-xs text-gray-400">{group.items.length} produk</span>
                                         </div>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                                             {group.items.map(product => {
                                                 const status = getProductStockStatus(product, selectedQuantity);
                                                 const isInCart = form.items.find(i => i.product_id === product.id);
@@ -265,20 +265,8 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                                                                 {isInCart.quantity}
                                                             </div>
                                                         )}
-                                                        <div className="font-semibold text-gray-900 text-sm leading-tight mb-1">{product.name}</div>
-                                                        <div className="text-blue-600 font-bold text-sm">Rp {Number(product.price).toLocaleString('id-ID')}</div>
-                                                        {product.ingredients && product.ingredients.length > 0 && (
-                                                            <div className="mt-2 space-y-0.5">
-                                                                {product.ingredients.slice(0, 2).map(ing => (
-                                                                    <div key={ing.id} className={`text-xs ${ing.stock < ing.pivot.quantity * selectedQuantity ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
-                                                                        {ing.name}: <span className="font-medium">{ing.stock}</span> {ing.unit}
-                                                                    </div>
-                                                                ))}
-                                                                {product.ingredients.length > 2 && (
-                                                                    <div className="text-xs text-gray-400">+{product.ingredients.length - 2} bahan lain</div>
-                                                                )}
-                                                            </div>
-                                                        )}
+                                                        <div className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight mb-1 line-clamp-2">{product.name}</div>
+                                                        <div className="text-blue-600 font-bold text-xs sm:text-sm">Rp {Number(product.price).toLocaleString('id-ID')}</div>
                                                         {status === 'insufficient' && (
                                                             <div className="mt-2 text-xs text-red-600 font-semibold">Stok habis</div>
                                                         )}
@@ -294,8 +282,8 @@ export default function OrderCreate({ tables, products, table_id }: Props) {
                             </div>
 
                             {/* Cart Sidebar */}
-                            <div className="lg:col-span-1">
-                                <div className="bg-white shadow-sm sm:rounded-lg p-6 sticky top-6">
+                            <div className="xl:col-span-1">
+                                <div className="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 sticky top-6">
                                     <div className="flex items-center justify-between mb-4">
                                         <h4 className="font-semibold text-gray-800">Keranjang</h4>
                                         {cartItemCount > 0 && (

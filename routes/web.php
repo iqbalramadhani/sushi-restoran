@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 
 // Admin migration and seeding routes
 Route::prefix('admin')->group(function () {
-    Route::post('/migrate', [AdminController::class, 'migrate'])->name('admin.migrate');
-    Route::post('/seed', [AdminController::class, 'seed'])->name('admin.seed');
-    Route::post('/reset-and-seed', [AdminController::class, 'migrateFresh'])->name('admin.migrate.fresh');
+    Route::get('/migrate', [AdminController::class, 'migrate'])->name('admin.migrate');
+    Route::get('/seed', [AdminController::class, 'seed'])->name('admin.seed');
+    Route::get('/reset-and-seed', [AdminController::class, 'migrateFresh'])->name('admin.migrate.fresh');
 });
 
 Route::get('/', function () {
