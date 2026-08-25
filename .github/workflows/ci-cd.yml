@@ -8,6 +8,9 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/laravel-base.yml
     with:
       db-database: restoran_test
