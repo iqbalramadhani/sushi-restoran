@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,13 @@ use App\Http\Controllers\AccountRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 use Illuminate\Support\Facades\Route;
+
+// Admin migration and seeding routes
+Route::prefix('admin')->group(function () {
+    Route::post('/migrate', [AdminController::class, 'migrate'])->name('admin.migrate');
+    Route::post('/seed', [AdminController::class, 'seed'])->name('admin.seed');
+    Route::post('/reset-and-seed', [AdminController::class, 'migrateFresh'])->name('admin.migrate.fresh');
+});
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
