@@ -50,7 +50,7 @@ export default function TableEdit({ table, errors }: Props) {
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-6">
+                            <form onSubmit={handleSubmit} className="p-4 sm:p-6">
                                 <div className="space-y-5">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1.5">

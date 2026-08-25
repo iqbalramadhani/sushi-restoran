@@ -76,7 +76,7 @@ export default function OrderIndex({ orders, pending }: Props) {
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             {/* Desktop Table */}
                             <div className="hidden md:block">
-                                <div className="p-6 border-b border-gray-100">
+                                <div className="p-4 sm:p-6 border-b border-gray-100">
                                     <h3 className="text-lg font-semibold text-gray-800">Semua Pesanan</h3>
                                 </div>
                                 <div className="overflow-x-auto">

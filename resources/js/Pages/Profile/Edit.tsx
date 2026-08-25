@@ -51,7 +51,7 @@ export default function ProfileEdit({ mustVerifyEmail, status }: { mustVerifyEma
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-6">
+                            <form onSubmit={handleSubmit} className="p-4 sm:p-6">
                                 <div className="space-y-5">
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -132,7 +132,7 @@ export default function ProfileEdit({ mustVerifyEmail, status }: { mustVerifyEma
                                 <h3 className="font-semibold text-red-800">Zona Bahaya</h3>
                                 <p className="text-sm text-red-600 mt-0.5">Hapus akun secara permanen</p>
                             </div>
-                            <div className="p-6">
+                            <div className="p-4 sm:p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-gray-700">Setelah menghapus akun, semua data Anda akan dihapus secara permanen.</p>

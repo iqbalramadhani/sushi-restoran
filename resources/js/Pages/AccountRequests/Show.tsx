@@ -55,7 +55,7 @@ export default function AccountRequestShow({ request }: Props) {
                     </div>
 
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6">
+                        <div className="p-4 sm:p-6">
                             <div className="mb-6 flex items-center justify-between">
                                 <h3 className="text-lg font-medium text-gray-900">
                                     Informasi Pengajuan

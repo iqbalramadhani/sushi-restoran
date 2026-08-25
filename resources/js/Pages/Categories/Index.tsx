@@ -29,7 +29,7 @@ export default function CategoryIndex({ categories, success }: Props) {
 
                         {/* Desktop Table */}
                         <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                                 <h3 className="text-lg font-semibold text-gray-800">Daftar Kategori</h3>
                                 <Link
                                     href={route('categories.create')}

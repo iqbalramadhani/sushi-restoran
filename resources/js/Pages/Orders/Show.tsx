@@ -18,7 +18,7 @@ export default function OrderShow({ order }: Props) {
                 <div className="py-6">
                     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white shadow-sm sm:rounded-lg">
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-start">
+                            <div className="p-4 sm:p-6 border-b border-gray-100 flex justify-between items-start">
                                 <div>
                                     <p className="text-sm text-gray-500">Meja</p>
                                     <p className="text-lg font-bold text-gray-900">{order.table?.name ?? '-'}</p>
@@ -32,7 +32,7 @@ export default function OrderShow({ order }: Props) {
                                     }`}>{order.status?.toUpperCase()}</span>
                                 </div>
                             </div>
-                            <div className="p-6">
+                            <div className="p-4 sm:p-6">
                                 <h4 className="font-semibold text-gray-700 mb-3">Item Pesanan</h4>
                                 {order.items?.length ? (
                                     <div className="space-y-2">
@@ -50,7 +50,7 @@ export default function OrderShow({ order }: Props) {
                                 </div>
                                 <p className="mt-2 text-xs text-gray-400">Dibuat: {new Date(order.created_at).toLocaleString('id-ID')}</p>
                             </div>
-                            <div className="p-6 bg-gray-50 flex justify-end gap-3">
+                            <div className="p-4 sm:p-6 bg-gray-50 flex justify-end gap-3">
                                 <Link href={route('orders.index')} className="px-4 py-2 bg-gray-100 rounded-md text-gray-700 hover:bg-gray-200">Kembali</Link>
                                 {order.status === 'pending' && <button onClick={processOrder} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Proses Order</button>}
                                 {order.status === 'processed' && <button onClick={completeOrder} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Selesaikan</button>}

@@ -86,7 +86,7 @@ export default function ProductCreate({ categories = [], ingredients = [] }: Pro
                 <div className="py-6">
                     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white shadow-sm sm:rounded-lg">
-                            <div className="p-6">
+                            <div className="p-4 sm:p-6">
                                 <form onSubmit={handleSubmit}>
                                     <div className="space-y-4">
                                         <div>
@@ -150,7 +150,7 @@ export default function ProductCreate({ categories = [], ingredients = [] }: Pro
                 {showCategoryModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                         <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
-                            <div className="p-6">
+                            <div className="p-4 sm:p-6">
                                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Tambah Kategori Baru</h3>
                                 <div className="space-y-4">
                                     <div>

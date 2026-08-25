@@ -22,7 +22,7 @@ export default function GuestLayout({ children }: GuestLayoutProps) {
             </div>
 
             <div className="w-full max-w-md">
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-8">
                     {children}
                 </div>
             </div>

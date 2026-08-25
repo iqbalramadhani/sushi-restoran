@@ -27,7 +27,7 @@ export default function UnitEdit({ unit, errors }: Props) {
                 <div className="py-6">
                     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
                         <div className="bg-white shadow-sm sm:rounded-lg">
-                            <div className="p-6">
+                            <div className="p-4 sm:p-6">
                                 <form onSubmit={handleSubmit}>
                                     <div className="space-y-4">
                                         <div>

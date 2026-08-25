@@ -80,7 +80,7 @@ export default function Dashboard({ stats }: Props) {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
                     <h3 className="text-base font-semibold text-gray-800 mb-4">
                         Aksi Cepat
                     </h3>
