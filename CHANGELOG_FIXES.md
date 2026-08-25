@@ -5,6 +5,12 @@ Berlaku untuk semua bug fix, regresi, dan catatan penting implementasi.
 
 ---
 
+### Fix #10 — Ubah Foreign Key Cascade ke Set Null pada products.category_id & orders.table_id
+Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
+2026-08-25 · database/migrations/2026_08_25_125345_update_products_category_id_to_set_null.php, database/migrations/2026_08_25_125559_update_orders_table_id_to_set_null.php · Saat kategori atau meja dihapus, semua produk/order terkait ikut terhapus (cascade) sehingga data histori transaksi hilang · Foreign key default di migration products & orders menggunakan `onDelete('cascade')` tanpa mempertimbangkan kebutuhan retain data · Buat migration baru untuk mengubah constraint: (1) `products.category_id` dari cascade ke set null, (2) `orders.table_id` dari cascade ke set null, dengan `->nullable()->change()` + dropForeign + re-add foreign nullOnDelete · ✅ Konfirmasi via `SHOW CREATE TABLE` — kedua tabel sekarang ON DELETE SET NULL · Foreign key cascade bisa menghapus data penting. Gunakan set null saat data turunan perlu dipertahankan sebagai arsip · products category_id cascade orders table_id · Sudah deploy
+
+---
+
 ### Fix #9 — TypeError: Cannot read properties of undefined (reading 'ingredients') di Order Create
 Tanggal · File · Masalah · Akar · Fix · Verifikasi · Pelajaran · Log Keyword · Deploy
 2026-08-24 · resources/js/Pages/Orders/Create.tsx · `Uncaught TypeError: Cannot read properties of undefined (reading 'ingredients')` di Create.tsx:42 saat render awal · Default `selectedProductId = 0`, sehingga `products.find(p => p.id === 0)` return `undefined`, lalu `getMaxPossibleQty(undefined)` akses `.ingredients` → crash · Ganti `getMaxPossibleQty(products.find(p => p.id === selectedProductId)!)` dengan IIFE yang melakukan null-check sebelum memanggil fungsi · ✅ Build bersih · Selalu defensive check saat mengakses properti dari hasil `find()` yang bisa return undefined · Create.tsx ingredient · Belum deploy
