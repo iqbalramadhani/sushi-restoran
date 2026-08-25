@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function Login({ status, errors }: Props) {
-    const [form, setForm] = useState({ username: '', password: '' });
+    const [form, setForm] = useState({ username: 'admin', password: 'SeCur3P@sswrD!' });
     const [processing, setProcessing] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
