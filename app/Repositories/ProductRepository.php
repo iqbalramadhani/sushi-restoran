@@ -15,6 +15,21 @@ class ProductRepository implements RepositoryInterface
         return $this->model->with(['category', 'ingredients'])->get();
     }
 
+    public function allWithOrderStatus(): Collection
+    {
+        $products = $this->model->with(['category', 'ingredients'])->get();
+
+        $orderedIds = DB::table('order_items')
+            ->distinct()
+            ->pluck('product_id');
+
+        $products->each(function ($product) use ($orderedIds) {
+            $product->has_been_ordered = $orderedIds->contains($product->id);
+        });
+
+        return $products;
+    }
+
     public function find(int $id): ?Product
     {
         return $this->model->with(['category', 'ingredients'])->find($id);
@@ -46,6 +61,12 @@ class ProductRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         return $this->model->destroy($id);
+    }
+
+    public function softDelete(int $id): bool
+    {
+        $product = $this->model->findOrFail($id);
+        return (bool) $product->delete();
     }
 
     public function findByCategory(int $categoryId): Collection

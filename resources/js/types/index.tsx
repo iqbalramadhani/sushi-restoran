@@ -31,6 +31,7 @@ export interface Product {
     is_available: boolean;
     category?: Category;
     ingredients?: ProductIngredient[];
+    has_been_ordered?: boolean;
     created_at: string;
     updated_at: string;
 }

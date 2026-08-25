@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         return Inertia::render('Products/Index', [
-            'products' => $this->service->getAll(),
+            'products' => $this->service->getAllWithOrderStatus(),
             'low_stock_products' => app(\App\Services\IngredientService::class)->getLowStockIngredients(),
         ]);
     }
@@ -91,6 +91,13 @@ class ProductController extends Controller
     {
         $this->service->delete($id);
         session()->flash('success', 'Product deleted successfully.');
+        return redirect()->route('products.index');
+    }
+
+    public function softDestroy(int $id)
+    {
+        $this->service->softDelete($id);
+        session()->flash('success', 'Product moved to trash.');
         return redirect()->route('products.index');
     }
 }

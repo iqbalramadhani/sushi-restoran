@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Product, ProductLowStock } from '@/types';
 import {
@@ -26,8 +26,10 @@ interface Props {
 export default function ProductIndex({ products, low_stock_products = [], success }: Props) {
     const [openId, setOpenId] = useState<number | null>(null);
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: number, hasBeenOrdered: boolean) => {
         if (!confirm('Yakin ingin menghapus produk ini?')) return;
+        const route = hasBeenOrdered ? 'products.soft-destroy' : 'products.destroy';
+        router.delete(route(id), { preserveScroll: true });
     };
 
     const getProductLowStock = (productId: number): ProductLowStock[] => {
@@ -136,7 +138,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                                             <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
                                                             Ubah
                                                         </Link>
-                                                        <button onClick={() => handleDelete(product.id)} className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium">
+                                                        <button onClick={() => handleDelete(product.id, product.has_been_ordered ?? false)} className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium">
                                                             <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
                                                             Hapus
                                                         </button>
@@ -256,7 +258,7 @@ export default function ProductIndex({ products, low_stock_products = [], succes
                                                     <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
                                                     Ubah
                                                 </Link>
-                                                <button onClick={() => handleDelete(product.id)} className="px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors flex items-center gap-1">
+                                                <button onClick={() => handleDelete(product.id, product.has_been_ordered ?? false)} className="px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors flex items-center gap-1">
                                                     <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
                                                     Hapus
                                                 </button>

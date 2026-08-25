@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('units', UnitController::class)->except(['show']);
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('products', ProductController::class)->except(['show']);
+    Route::delete('/products/{product}/soft-destroy', [ProductController::class, 'softDestroy'])->name('products.soft-destroy');
     Route::resource('ingredients', IngredientController::class)->except(['show']);
     Route::resource('tables', TableController::class)->except(['show']);
     Route::post('/tables/{table}/occupy', [TableController::class, 'occupy'])->name('tables.occupy');

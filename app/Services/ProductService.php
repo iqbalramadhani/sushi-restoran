@@ -13,6 +13,11 @@ class ProductService
         return $this->repository->all();
     }
 
+    public function getAllWithOrderStatus(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->repository->allWithOrderStatus();
+    }
+
     public function getAvailable(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->repository->available();
@@ -31,5 +36,10 @@ class ProductService
     public function delete(int $id): bool
     {
         return $this->repository->delete($id);
+    }
+
+    public function softDelete(int $id): bool
+    {
+        return $this->repository->softDelete($id);
     }
 }
