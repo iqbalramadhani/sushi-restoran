@@ -52,6 +52,7 @@ class ProductController extends Controller
             );
         }
 
+        $this->logActivity('product_created', $product, $request);
         session()->flash('success', 'Product created successfully.');
         return redirect()->route('products.index');
     }
@@ -81,22 +82,28 @@ class ProductController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+        $product = $this->service->getAll()->first(fn($p) => $p->id === $id);
         $this->service->update($id, $validated);
 
+        $this->logActivity('product_updated', $product, $request);
         session()->flash('success', 'Product updated successfully.');
         return redirect()->route('products.index');
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $product = $this->service->getAll()->first(fn($p) => $p->id === $id);
         $this->service->delete($id);
+        $this->logActivity('product_deleted', $product, $request);
         session()->flash('success', 'Product deleted successfully.');
         return redirect()->route('products.index');
     }
 
-    public function softDestroy(int $id)
+    public function softDestroy(Request $request, int $id)
     {
+        $product = $this->service->getAll()->first(fn($p) => $p->id === $id);
         $this->service->softDelete($id);
+        $this->logActivity('product_soft_deleted', $product, $request);
         session()->flash('success', 'Product moved to trash.');
         return redirect()->route('products.index');
     }

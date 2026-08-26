@@ -17,16 +17,20 @@ class TableController extends Controller
         ]);
     }
 
-    public function occupy(int $id)
+    public function occupy(Request $request, int $id)
     {
+        $table = $this->service->findById($id);
         $this->service->occupy($id);
+        $this->logActivity('table_occupied', $table, $request);
         session()->flash('success', 'Table is now occupied.');
         return redirect()->route('tables.index');
     }
 
-    public function free(int $id)
+    public function free(Request $request, int $id)
     {
+        $table = $this->service->findById($id);
         $this->service->free($id);
+        $this->logActivity('table_freed', $table, $request);
         session()->flash('success', 'Table is now available.');
         return redirect()->route('tables.index');
     }
@@ -44,7 +48,8 @@ class TableController extends Controller
             'seat_count' => 'required|integer|min:1',
         ]);
 
-        $this->service->create($validated);
+        $table = $this->service->create($validated);
+        $this->logActivity('table_created', $table, $request);
         session()->flash('success', 'Table created successfully.');
         return redirect()->route('tables.index');
     }
@@ -64,14 +69,18 @@ class TableController extends Controller
             'seat_count' => 'required|integer|min:1',
         ]);
 
+        $table = $this->service->findById($id);
         $this->service->update($id, $validated);
+        $this->logActivity('table_updated', $table, $request);
         session()->flash('success', 'Table updated successfully.');
         return redirect()->route('tables.index');
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $table = $this->service->findById($id);
         $this->service->destroy($id);
+        $this->logActivity('table_deleted', $table, $request);
         session()->flash('success', 'Table deleted successfully.');
         return redirect()->route('tables.index');
     }

@@ -13,6 +13,7 @@ import {
     Menu,
     X,
     ChevronDown,
+    Clock,
 } from 'lucide-react';
 
 interface Props {
@@ -45,6 +46,7 @@ export default function AuthenticatedLayout({ children, header }: Props) {
         { href: route('tables.index'), label: 'Meja', icon: TableIcon, active: route().current('tables.*') },
         { href: route('units.index'), label: 'Satuan', icon: Ruler, active: route().current('units.*') },
         { href: route('categories.index'), label: 'Kategori', icon: Tag, active: route().current('categories.*') },
+        { href: route('activity-logs.index'), label: 'Riwayat', icon: Clock, active: route().current('activity-logs.*') },
     ];
 
     return (

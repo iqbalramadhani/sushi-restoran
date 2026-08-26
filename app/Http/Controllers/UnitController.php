@@ -30,7 +30,8 @@ class UnitController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
-        $this->service->create($validated);
+        $unit = $this->service->create($validated);
+        $this->logActivity('unit_created', $unit, $request);
         session()->flash('success', 'Satuan berhasil ditambahkan.');
         return redirect()->route('units.index');
     }
@@ -49,14 +50,18 @@ class UnitController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+        $unit = $this->service->findById($id);
         $this->service->update($id, $validated);
+        $this->logActivity('unit_updated', $unit, $request);
         session()->flash('success', 'Satuan berhasil diperbarui.');
         return redirect()->route('units.index');
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $unit = $this->service->findById($id);
         $this->service->delete($id);
+        $this->logActivity('unit_deleted', $unit, $request);
         session()->flash('success', 'Satuan berhasil dihapus.');
         return redirect()->route('units.index');
     }

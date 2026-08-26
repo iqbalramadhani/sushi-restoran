@@ -31,7 +31,8 @@ class CategoryController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
-        $this->service->create($validated);
+        $category = $this->service->create($validated);
+        $this->logActivity('category_created', $category, $request);
         session()->flash('success', 'Kategori berhasil ditambahkan.');
         return redirect()->route('categories.index');
     }
@@ -51,14 +52,18 @@ class CategoryController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+        $category = $this->service->findById($id);
         $this->service->update($id, $validated);
+        $this->logActivity('category_updated', $category, $request);
         session()->flash('success', 'Kategori berhasil diperbarui.');
         return redirect()->route('categories.index');
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $category = $this->service->findById($id);
         $this->service->delete($id);
+        $this->logActivity('category_deleted', $category, $request);
         session()->flash('success', 'Kategori berhasil dihapus.');
         return redirect()->route('categories.index');
     }

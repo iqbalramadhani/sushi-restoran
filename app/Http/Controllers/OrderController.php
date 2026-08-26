@@ -43,6 +43,7 @@ class OrderController extends Controller
                 $validated['items']
             );
 
+            $this->logActivity('order_created', $order, $request);
             session()->flash('success', 'Order created successfully.');
             return redirect()->route('orders.show', $order->id);
         } catch (\Exception $e) {
@@ -56,24 +57,30 @@ class OrderController extends Controller
         return Inertia::render('Orders/Show', ['order' => $order]);
     }
 
-    public function process(int $id)
+    public function process(Request $request, int $id)
     {
+        $order = $this->service->find($id);
         $this->service->processOrder($id);
+        $this->logActivity('order_processed', $order, $request);
         session()->flash('success', 'Order is now being processed.');
         return redirect()->route('orders.index');
     }
 
-    public function complete(int $id)
+    public function complete(Request $request, int $id)
     {
+        $order = $this->service->find($id);
         $this->service->completeOrder($id);
+        $this->logActivity('order_completed', $order, $request);
         session()->flash('success', 'Order completed.');
         return redirect()->route('orders.index');
     }
 
-    public function cancel(int $id)
+    public function cancel(Request $request, int $id)
     {
+        $order = $this->service->find($id);
         try {
             $this->service->cancelOrder($id);
+            $this->logActivity('order_cancelled', $order, $request);
             session()->flash('success', 'Order cancelled.');
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());

@@ -118,6 +118,25 @@ export interface Order {
     updated_at: string;
 }
 
+export interface ActivityLog {
+    id: number;
+    user_id: number | null;
+    action: string;
+    subject_type: string | null;
+    subject_id: number | null;
+    description: string | null;
+    ip_address: string | null;
+    user_agent: string | null;
+    user?: {
+        id: number;
+        name: string;
+        username: string;
+        role: 'admin' | 'staff';
+    };
+    created_at: string;
+    updated_at: string;
+}
+
 export interface DashboardStats {
     revenue_today: number;
     total_orders_today: number;

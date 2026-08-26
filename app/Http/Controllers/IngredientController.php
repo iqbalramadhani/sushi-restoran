@@ -42,8 +42,9 @@ class IngredientController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $validated['stock'] = $validated['stock'] ?? 0;
         $validated['min_stock'] = $validated['min_stock'] ?? 0;
-        $this->service->create($validated);
+        $ingredient = $this->service->create($validated);
 
+        $this->logActivity('ingredient_created', $ingredient, $request);
         session()->flash('success', 'Bahan baku berhasil ditambahkan.');
         return redirect()->route('ingredients.index');
     }
@@ -67,15 +68,19 @@ class IngredientController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+        $ingredient = $this->service->getAll()->first(fn($i) => $i->id === $id);
         $this->service->update($id, $validated);
 
+        $this->logActivity('ingredient_updated', $ingredient, $request);
         session()->flash('success', 'Bahan baku berhasil diperbarui.');
         return redirect()->route('ingredients.index');
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $ingredient = $this->service->getAll()->first(fn($i) => $i->id === $id);
         $this->service->delete($id);
+        $this->logActivity('ingredient_deleted', $ingredient, $request);
         session()->flash('success', 'Bahan baku berhasil dihapus.');
         return redirect()->route('ingredients.index');
     }

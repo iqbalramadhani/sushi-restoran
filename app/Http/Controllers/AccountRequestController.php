@@ -55,6 +55,7 @@ class AccountRequestController extends Controller
             'notes' => $request->input('notes'),
         ]);
 
+        $this->logActivity('account_request_approved', $accountRequest, $request);
         Auth::login($user);
 
         return redirect()->route('dashboard');
@@ -72,6 +73,7 @@ class AccountRequestController extends Controller
             'notes' => $request->input('notes'),
         ]);
 
+        $this->logActivity('account_request_rejected', $accountRequest, $request);
         return redirect()->route('account-requests.index');
     }
 }
