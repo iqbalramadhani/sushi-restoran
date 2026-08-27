@@ -33,7 +33,7 @@ class IngredientController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:ingredients,name',
             'unit' => 'required|string|max:10',
             'stock' => 'nullable|numeric|min:0',
             'min_stock' => 'nullable|numeric|min:0',
@@ -61,7 +61,7 @@ class IngredientController extends Controller
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:ingredients,name,' . $id,
             'unit' => 'required|string|max:10',
             'stock' => 'nullable|numeric|min:0',
             'min_stock' => 'nullable|numeric|min:0',

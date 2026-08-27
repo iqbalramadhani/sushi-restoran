@@ -35,6 +35,6 @@ class ActivityLogService
 
     public function getAll()
     {
-        return $this->repository->all();
+        return $this->repository->paginate(30);
     }
 }
